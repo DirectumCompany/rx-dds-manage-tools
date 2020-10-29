@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Äëÿ RX 3.5 -->
+<settings>
+  <version>
+    <var name="format_version" value="1.1"/>
+  </version>
+
+  <root_paths_rx>
+     <var name="!wwwroot!" value="C:\inetpub\wwwroot"/>
+     <var name="!ddsroot!" value="C:\Program Files\Directum Company\Sungero Development Studio"/>
+  </root_paths_rx>
+
+  <appliedmodules>
+     <var path="!wwwroot!\DirectumRxLocal\bin\AppliedModules\"/>
+     <var path="!wwwroot!\DirectumRxWebLocal\api\bin\AppliedModules\"/>
+     <var path="!wwwroot!\DrxServiceRunnerLocal\Apps\DrxWorkerLocal\AppliedModules\"/>
+     <var path="!wwwroot!\DrxServiceRunnerLocal\Apps\DrxWorkflowBlockServiceLocal\AppliedModules\"/>
+  </appliedmodules>
+
+  <block name="config_files">	  
+    <config_file name="DirectumRxLocal" file="!wwwroot!\DirectumRxLocal\_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DirectumRxWebLocal" file="!wwwroot!\DirectumRxWebLocal\api\_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxWebLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxIndexingServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxIndexingServiceLocal_ConfigSettings.xml">
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxJobSchedulerLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxJobSchedulerLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxPreviewServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxPreviewServiceLocal_ConfigSettings.xml">
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+       <var name="TEMP_CONVERSION_FOLDER"           value="!DOC_ROOT_DIRECTORY!\PreviewTemp\" />
+       <var name="DOCUMENT_PROVIDER_CACHE_FOLDER"   value="!DOC_ROOT_DIRECTORY!\PreviewSource\" />
+    </config_file>
+
+    <config_file name="DrxPreviewStorageLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxPreviewStorageLocal_ConfigSettings.xml">
+       <var name="STORAGE_PATH" value="!DOC_ROOT_DIRECTORY!\PreviewDebug\" />
+    </config_file>
+
+
+    <config_file name="DrxStorageServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxStorageServiceLocal_ConfigSettings.xml">
+       <var name="STORAGE_PATH"                     value="!DOC_ROOT_DIRECTORY!\DocStorage\" />
+    </config_file>
+
+    <config_file name="DrxWorkerLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxWorkerLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxWorkflowBlockServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxWorkflowBlockServiceLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxWorkflowProcessServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxWorkflowProcessServiceLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxDelayedOperationsServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxDelayedOperationsServiceLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="sungero_development_studio" file="!ddsroot!\Bin\_ConfigSettings.xml">
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!" /> 
+       <var name="GIT_ROOT_DIRECTORY" value="!GIT_ROOT_DIRECTORY!"/>
+    </config_file>
+
+    <config_file name="sungero_development_studio_readonly" file="!ddsroot!\Bin\_ConfigSettings.xml">
+       <var name="GIT_ROOT_DIRECTORY" value="!GIT_ROOT_DIRECTORY!"/>
+       <var name="LOCAL_SERVER_RELATIVE_PATH" value="" />
+       <var name="LOCAL_WORKFLOW_PATH" value="" />
+       <var name="LOCAL_WORKER_PATH" value="" />
+       <var name="LOCAL_WEB_RELATIVE_PATH" value="" />
+       <var name="QUEUE_CONNECTION_STRING" value="" />
+    </config_file>
+
+    <config_file name="registry" file="HKLM:\SOFTWARE\Directum Company\Sungero Development Studio\Parameters">
+       <var name="LOCAL_DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="LOCAL_DATABASE_SERVER" value="!DATABASE_SERVER!"/>
+       <var name="LOCAL_APP_DATABASE" value="!DATABASE!"/>
+
+       <var name="LOCAL_STORAGE_PATH" value="!DOC_ROOT_DIRECTORY!\DocStorage\"/>
+       <var name="LOCAL_TEMP_CONVERSION_FOLDER" value="!DOC_ROOT_DIRECTORY!\PreviewTemp\"/>
+       <var name="LOCAL_DOCUMENT_PROVIDER_CACHE_FOLDER" value="!DOC_ROOT_DIRECTORY!\PreviewSource\"/>
+       <var name="LOCAL_PREVIEW_STORAGE_PATH" value="!DOC_ROOT_DIRECTORY!\PreviewDebug\"/>
+
+       <var name="SDS_ENTITY_EDITOR_PATH" value="!GIT_ROOT_DIRECTORY!"/>
+    </config_file>
+
+  </block>
+</settings>
+

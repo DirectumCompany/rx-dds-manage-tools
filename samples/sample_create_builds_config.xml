@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Пример заполнения конфига для сборки комплектов -->
+<settings>
+	<!-- Описание комплектов разработки -->
+	<set_infos>
+		<!-- Чтобы номер билда (1.0.3419.2) корректно увеличился (+1), 
+			 нужно описание комплекта и пакета с бинарниками расположить в конце списка (ограничение DDS) -->
+		<!-- "folder_name" - Имя папки комплекта -->
+		<set_info folder_name="BTERSolution">
+			<!-- "pack_name" - Имя пакета с разработкой -->
+			<!-- "config_path" - Относительный путь к конфигу пакета (Должен находиться в папке репозитория) -->
+			<pack_info pack_name="BTERShellO_Work" config_path="build\sets\BTERSolution\BTERShellO_Work.xml"/>
+			<pack_info pack_name="BTERSolution_Base" config_path="build\sets\BTERSolution\BTERSolution_Base.xml"/>
+		</set_info>
+		<set_info folder_name="BTERSolution_Bin">
+			<pack_info pack_name="BTERSolution_Bin" config_path="build\sets\BTERSolution_Bin\BTERSolution_Bin.xml"/>
+		</set_info>	
+	</set_infos>	
+	
+	<paths_for_copy_to_set>
+		<!-- Данные (папки или файлы) для копирования в каждый пакет.-->
+		<!--!Должны находиться в папке репозитория! -->
+		<path_for_copy_to_set path="Templates"/>
+		<path_for_copy_to_set path="changelog.md"/>
+		<path_for_copy_to_set path="Docs"/>
+	</paths_for_copy_to_set>
+	
+	<!-- Относительный путь к файлу с описанием комплектов (Должен находиться в папке репозитория) -->
+	<sets_description path="build\sets\readme.txt"/>
+				
+</settings>
