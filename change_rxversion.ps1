@@ -33,9 +33,7 @@ $realWWWRoot = $pathTargetVersion + "\wwwroot"
 $realDDS =   $pathTargetVersion + "\Sungero Development Studio"
 
 # ============================ ОСТАНОВКА СЛУЖБ =====================================
-Write-Host "Останавливаем службы..."
-Start-Process -FilePath 'iisreset' -ArgumentList '/stop' -NoNewWindow  -Wait
-Start-Process -FilePath 'net' -ArgumentList 'stop DrxServiceRunnerLocal' -NoNewWindow -Wait
+.\stop-rx.ps1
 
 
 switch($PSVersionTable.PSVersion.Major)
@@ -58,3 +56,5 @@ switch($PSVersionTable.PSVersion.Major)
      Write-Host "Неизвестная верси Powershell " $PSVersionTable.PSVersion
   }
 }
+
+pause

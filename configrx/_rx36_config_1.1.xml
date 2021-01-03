@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Для RX 3.4 -->
+<!-- Для RX 3.5 -->
 <settings>
   <version>
     <var name="format_version" value="1.1"/>
@@ -30,10 +30,6 @@
        <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
     </config_file>
 
-    <config_file name="DrxIndexingServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxIndexingServiceLocal_ConfigSettings.xml">
-       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
-    </config_file>
-
     <config_file name="DrxJobSchedulerLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxJobSchedulerLocal_ConfigSettings.xml">
        <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
        <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
@@ -49,7 +45,6 @@
     <config_file name="DrxPreviewStorageLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxPreviewStorageLocal_ConfigSettings.xml">
        <var name="STORAGE_PATH" value="!DOC_ROOT_DIRECTORY!\PreviewDebug\" />
     </config_file>
-
 
     <config_file name="DrxStorageServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxStorageServiceLocal_ConfigSettings.xml">
        <var name="STORAGE_PATH"                     value="!DOC_ROOT_DIRECTORY!\DocStorage\" />
@@ -76,6 +71,10 @@
     <config_file name="DrxDelayedOperationsServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxDelayedOperationsServiceLocal_ConfigSettings.xml">
        <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
        <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxClientsConnectionService_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxClientsConnectionService_ConfigSettings.xml">
        <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
     </config_file>
 

@@ -165,10 +165,8 @@ if($answ -in 'n', 'N') {
 }
 
 if (!$test_mode) {
-  # ============================ ОСТАНОВКА СЛУЖБ =====================================
-  Write-Host "Останавливаем службы..."
-  Start-Process -FilePath 'iisreset' -ArgumentList '/stop' -NoNewWindow  -Wait
-  Start-Process -FilePath 'net' -ArgumentList 'stop DrxServiceRunnerLocal' -NoNewWindow -Wait
+  ## ============================ ОСТАНОВКА СЛУЖБ =====================================
+  .\stop-rx.ps1
 
   # ============================ ЧИСТКА AppliedModules =====================================
   Write-Host "Чистим AppliedModules..."
@@ -222,8 +220,8 @@ foreach($block in $settings_xml.DocumentElement.block){
 }
 
 if (!$test_mode) {
-  # ============================ ЗАПУСК СЛУЖБ =====================================
-  Write-Host "Запускаем службы обратно..."
-  Start-Process -FilePath 'iisreset' -ArgumentList '/start' -NoNewWindow  -Wait
-  Start-Process -FilePath 'net' -ArgumentList 'start DrxServiceRunnerLocal' -NoNewWindow  -Wait
+  ## ============================ ЗАПУСК СЛУЖБ =====================================
+  .\start-rx.ps1
 }
+
+pause

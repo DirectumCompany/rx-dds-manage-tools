@@ -79,7 +79,8 @@ foreach($set_info in $settings_xml.DocumentElement.set_infos.SelectNodes("set_in
     # DDS запускается с ключами: -d <Имя пакета> -c <Путь к конфигу>
     $argumentList = '-d '+$new_pack_name+' -c '+$config_full_path
     Write-Host $dds_path $argumentList 
-    Start-Process -FilePath $dds_path -ArgumentList $argumentList -Wait -NoNewWindow
+    # старт DDS без ожидания завершения дочернего подпроцесса
+    Start-Process -FilePath $dds_path -ArgumentList $argumentList -NoNewWindow -passthru | Wait-Process
     Write-Host ""  
   }
   
