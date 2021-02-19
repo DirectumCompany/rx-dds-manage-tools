@@ -7,13 +7,19 @@
 			 нужно описание комплекта и пакета с бинарниками расположить в конце списка (ограничение DDS) -->
 		<!-- "folder_name" - Имя папки комплекта -->
 		<set_info folder_name="BTERSolution">
+			<!-- pack_info - узлы с описанием пакетов разработки, которые будут подготовлены для комплекта -->
 			<!-- "pack_name" - Имя пакета с разработкой -->
 			<!-- "config_path" - Относительный путь к конфигу пакета (Должен находиться в папке репозитория) -->
 			<pack_info pack_name="BTERShellO_Work" config_path="build\sets\BTERSolution\BTERShellO_Work.xml"/>
 			<pack_info pack_name="BTERSolution_Base" config_path="build\sets\BTERSolution\BTERSolution_Base.xml"/>
+			<!-- file_info - описание файлов, которые будут скопированы в этот пакет разработки -->
+			<!-- "file_name" - Имя файла -->
+			<!-- "config_path" - Относительный путь к файлу  (Должен находиться в папке репозитория) -->
+			<file_info file_path="readme.txt" file_path="build\sets\BTERSolution\readme.txt"/>
 		</set_info>
 		<set_info folder_name="BTERSolution_Bin">
 			<pack_info pack_name="BTERSolution_Bin" config_path="build\sets\BTERSolution_Bin\BTERSolution_Bin.xml"/>
+			<file_info file_name="readme.txt" file_path="build\sets\BTERSolution_Bin\readme.txt"/>
 		</set_info>	
 	</set_infos>	
 	

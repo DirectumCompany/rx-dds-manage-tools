@@ -149,12 +149,25 @@ Do {
   # Показать пользователю с какими параметрами будет произведена подмена
   Write-Host 'Будет выполнено переключение на стенд со следующими параметрами:'
   foreach($p in $macro_vars) {
-     Write-Host '   ' $p.Keys[0] " = " $p.Values[0]
+     Write-Host '   ' $p.Keys[0] " = " -NoNewLine 
+     if(($p.Keys[0] -eq "!DATABASE!") -or ($p.Keys[0] -eq "!DOC_ROOT_DIRECTORY!") -or ($p.Keys[0] -eq "!GIT_ROOT_DIRECTORY!")) {
+       # значения критичных переменных вывести с выделением цветом
+       Write-Host $p.Values[0] -ForegroundColor Green
+     } else {
+       Write-Host $p.Values[0]
+     }
   }
   Write-Host  '    <block name="REPOSITORIES">'
   foreach($p in $dds_repos_params) {
-     $s = '        <repository folderName="' + $p.folderName + '" solutionType="' + $p.solutionType + '" url="' + $p.url + '" />'
-     echo $s
+    Write-Host '        <repository folderName="' -NoNewLine
+    Write-Host $p.folderName -NoNewLine -ForegroundColor Green 
+    Write-Host '" solutionType="' -NoNewLine
+    Write-Host $p.solutionType -NoNewLine -ForegroundColor Green 
+    Write-Host '" url="' -NoNewLine
+    Write-Host $p.url -NoNewLine -ForegroundColor Green 
+    Write-Host '" />'
+     #$s = '        <repository folderName="' + $p.folderName + '" solutionType="' + $p.solutionType + '" url="' + $p.url + '" />'
+     #echo $s
   }
   Write-Host  "    </block>"
   $answ = Read-Host "Продолжить (y/n)?"
