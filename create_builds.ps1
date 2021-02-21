@@ -196,8 +196,8 @@ if($create_build) {
   #Скопировать описание комплектов
   $sets_description = $settings_xml.DocumentElement.sets_description.path
   $sets_description_path = $local_git_repo_path + "\" + $sets_description
-  Write-Host 'Копирование описания комплектов ' $sets_description ' в ' $solution_folder
-  Copy-Item -Path $sets_description_path -Destination $solution_folder -Recurse –Force
+  Write-Host 'Копирование описания комплектов ' $sets_description ' в ' $version_folder
+  Copy-Item -Path $sets_description_path -Destination $version_folder -Recurse –Force
 } 
 
 
