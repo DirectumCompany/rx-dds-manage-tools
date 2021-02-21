@@ -1,6 +1,7 @@
 # переключение между разными прикладными проектами в рамках одной версии RX
 Param ([string] $project_config,
        [switch] $test_mode,
+       [switch] $confirm,
        [switch] $help)
 
 function new_file_name($file_name, $test_mode) {
@@ -87,6 +88,7 @@ if($project_config -eq ""){
   Break
 }
 
+# Проверить наличие конфига с описанием проекта
 $is_exist_project_config = Test-Path $project_config -PathType Leaf
 if(!$is_exist_project_config){
   Write-Host ""
@@ -113,9 +115,22 @@ foreach($var in $stand_xml.DocumentElement.stand_vars.SelectNodes("var")){
 foreach($var in $stand_xml.DocumentElement.rx_config_file.SelectNodes("var")){
   if($var.file -eq "rx_config") {
     $rx_config = $var.value
+    if ($rx_config.Chars(0) -eq ".") {
+      $rx_config = Join-Path -Path $PSScriptRoot -ChildPath $rx_config.Substring(1)
+    }
     break
   }
 }
+# проверить наличие файла привязки к версии RX
+$is_exist_rx_config = Test-Path $rx_config -PathType Leaf
+if(!$is_exist_rx_config){
+  Write-Host ""
+  Write-Host "Не найден файл привязки к версии RX " $rx_config 
+  Write-Host ""
+  Break
+}
+
+
 $settings_xml =  [xml](Get-Content $rx_config)
 $wwwroot_dir = "C:\X\inetpub\wwwroot"
 $ddsroot_dir = "C:\X\Program Files\Directum Company\Sungero Development Studio"
@@ -128,6 +143,24 @@ foreach($var in $settings_xml.DocumentElement.root_paths_rx.SelectNodes("var")){
     $ddsroot_dir = $var.value
   }
 }
+# проверить наличие папки wwwroot
+$is_exist_wwwroot_dir = Test-Path $wwwroot_dir -PathType Container
+if(!$is_exist_wwwroot_dir){
+  Write-Host ""
+  Write-Host "Не найден каталог wwwroot: " $wwwroot_dir 
+  Write-Host ""
+  Break
+}
+# проверить наличие папки с dds
+$is_exist_ddsroot_dir = Test-Path $ddsroot_dir -PathType Container
+if(!$is_exist_ddsroot_dir){
+  Write-Host ""
+  Write-Host "Не найден каталог c DDS: " $ddsroot_dir 
+  Write-Host ""
+  Break
+}
+
+
 
 $dds_repos_params = @()
 foreach($block in $stand_xml.DocumentElement.stand_vars.block){
@@ -170,7 +203,11 @@ Do {
      #echo $s
   }
   Write-Host  "    </block>"
-  $answ = Read-Host "Продолжить (y/n)?"
+  if( -not $confirm) {
+    $answ = Read-Host "Продолжить (y/n)?"
+  } else {
+    $answ = 'Y'
+  }
 } While ($answ -notin 'y', 'n', 'Y', 'N')
 
 if($answ -in 'n', 'N') {
@@ -179,7 +216,7 @@ if($answ -in 'n', 'N') {
 
 if (!$test_mode) {
   ## ============================ ОСТАНОВКА СЛУЖБ =====================================
-  .\stop-rx.ps1
+  & "$PSScriptRoot\stop-rx.ps1"
 
   # ============================ ЧИСТКА AppliedModules =====================================
   Write-Host "Чистим AppliedModules..."
@@ -187,7 +224,8 @@ if (!$test_mode) {
     $is_exist_path = Test-Path $p.path -PathType Container
     Write-Host "  " $p.path $is_exist_path
     if($is_exist_path) {
-      Get-ChildItem $p.path -recurse | Remove-Item -Recurse -Confirm:$false -Force
+      #Get-ChildItem $p.path -recurse | Remove-Item -Recurse -Confirm:$false -Force
+      (Get-ChildItem $p.path -Recurse -Force) | sort pspath -Descending -unique | Remove-Item -force -recurse
     }
   }
 }
@@ -234,7 +272,9 @@ foreach($block in $settings_xml.DocumentElement.block){
 
 if (!$test_mode) {
   ## ============================ ЗАПУСК СЛУЖБ =====================================
-  .\start-rx.ps1
+  & "$PSScriptRoot\start-rx.ps1"
 }
 
-pause
+if( -not $confirm) {
+  pause
+}

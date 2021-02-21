@@ -6,7 +6,7 @@
 		<!-- Чтобы номер билда (1.0.3419.2) корректно увеличился (+1), 
 			 нужно описание комплекта и пакета с бинарниками расположить в конце списка (ограничение DDS) -->
 		<!-- "folder_name" - Имя папки комплекта -->
-		<set_info folder_name="BTERSolution">
+		<set_info folder_name="BTERSolution"  zip_name="Авансовые отчеты и командировки (для проектов внедрения)">
 			<!-- pack_info - узлы с описанием пакетов разработки, которые будут подготовлены для комплекта -->
 			<!-- "pack_name" - Имя пакета с разработкой -->
 			<!-- "config_path" - Относительный путь к конфигу пакета (Должен находиться в папке репозитория) -->
@@ -17,7 +17,7 @@
 			<!-- "config_path" - Относительный путь к файлу  (Должен находиться в папке репозитория) -->
 			<file_info file_path="readme.txt" file_path="build\sets\BTERSolution\readme.txt"/>
 		</set_info>
-		<set_info folder_name="BTERSolution_Bin">
+		<set_info folder_name="BTERSolution_Bin"  zip_name="Авансовые отчеты и командировки (ознакомительная версия)">
 			<pack_info pack_name="BTERSolution_Bin" config_path="build\sets\BTERSolution_Bin\BTERSolution_Bin.xml"/>
 			<file_info file_name="readme.txt" file_path="build\sets\BTERSolution_Bin\readme.txt"/>
 		</set_info>	
