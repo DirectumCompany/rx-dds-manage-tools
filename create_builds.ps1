@@ -1,4 +1,4 @@
-# подготовка инсталляционных комплектов при выпуске версии решения
+# РїРѕРґРіРѕС‚РѕРІРєР° РёРЅСЃС‚Р°Р»Р»СЏС†РёРѕРЅРЅС‹С… РєРѕРјРїР»РµРєС‚РѕРІ РїСЂРё РІС‹РїСѓСЃРєРµ РІРµСЂСЃРёРё СЂРµС€РµРЅРёСЏ
 Param ([string]$dds_path, 
        [string]$local_git_repo_path, 
        [string]$create_builds_config,
@@ -23,15 +23,15 @@ function show_test_path($PathType, $Path) {
 
 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
 
-# ============================ ОБРАБОТКА ПАРАМЕТРОВ =====================================
+# ============================ РћР‘Р РђР‘РћРўРљРђ РџРђР РђРњР•РўР РћР’ =====================================
 if($help){
   Write-Host ""
-  Write-Host "create_builds.ps1 - подготовка инсталляционных комплектов при выпуске версии решения"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\create_builds.ps1 -dds_path <путь к DevelopmentStudio.exe> -local_git_repo_path <папка с репозиторием решения> -create_builds_config <конфиг с описанием комплектов> -solution_folder <папка, в которую выгружаются комплекты> [-help] [-create_build|-create_zip|-test_mode]"
-  Write-Host "Пример вызова:"
+  Write-Host "create_builds.ps1 - РїРѕРґРіРѕС‚РѕРІРєР° РёРЅСЃС‚Р°Р»Р»СЏС†РёРѕРЅРЅС‹С… РєРѕРјРїР»РµРєС‚РѕРІ РїСЂРё РІС‹РїСѓСЃРєРµ РІРµСЂСЃРёРё СЂРµС€РµРЅРёСЏ"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\create_builds.ps1 -dds_path <РїСѓС‚СЊ Рє DevelopmentStudio.exe> -local_git_repo_path <РїР°РїРєР° СЃ СЂРµРїРѕР·РёС‚РѕСЂРёРµРј СЂРµС€РµРЅРёСЏ> -create_builds_config <РєРѕРЅС„РёРі СЃ РѕРїРёСЃР°РЅРёРµРј РєРѕРјРїР»РµРєС‚РѕРІ> -solution_folder <РїР°РїРєР°, РІ РєРѕС‚РѕСЂСѓСЋ РІС‹РіСЂСѓР¶Р°СЋС‚СЃСЏ РєРѕРјРїР»РµРєС‚С‹> [-help] [-create_build|-create_zip|-test_mode]"
+  Write-Host "РџСЂРёРјРµСЂ РІС‹Р·РѕРІР°:"
   Write-Host "   .\create_builds.ps1 -local_git_repo_path 'C:\RX\AppSol' -create_builds_config 'C:\RX\AppSol\build\builds_config.xml' -solution_folder 'D:\Install\AppSol' -version_number '1.1.3421.0' -create_build"
-  Write-Host "Параметр dds_path может быть опущен. В этом случае используется значение по умолчанию - C:\Program Files\Directum Company\Sungero Development Studio\Bin\DevelopmentStudio.exe"
+  Write-Host "РџР°СЂР°РјРµС‚СЂ dds_path РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕРїСѓС‰РµРЅ. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - C:\Program Files\Directum Company\Sungero Development Studio\Bin\DevelopmentStudio.exe"
   Write-Host ""
   Break
 }
@@ -42,23 +42,23 @@ if($dds_path -eq ""){
 }
 
 if($local_git_repo_path -eq ""){
-  Write-Host "Не указан параметр -local_git_repo_path"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -local_git_repo_path"
 }
 
 if($create_builds_config -eq ""){
-  Write-Host "Не указан параметр -create_builds_config"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -create_builds_config"
 }
 
 if($solution_folder -eq ""){
-  Write-Host "Не указан параметр -solution_folder"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -solution_folder"
 }
 
 if($version_number -eq ""){
-  Write-Host "Не указан параметр -version_number"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -version_number"
 }
 
 if($dds_path -eq "" -or $local_git_repo_path -eq "" -or $create_builds_config -eq "" -or $solution_folder -eq "" -or $version_number -eq ""){
-  Write-Host "Пример вызова:"
+  Write-Host "РџСЂРёРјРµСЂ РІС‹Р·РѕРІР°:"
   Write-Host "   .\create_builds.ps1 -local_git_repo_path 'C:\RX\AppSol' -create_builds_config 'C:\RX\AppSol\build\builds_config.xml' -solution_folder 'D:\Install\AppSol' -version_number '1.1.3421.0' -create_build"
   Break
 }
@@ -69,8 +69,8 @@ $version_folder = Join-Path -Path $solution_folder -ChildPath $version_number
 if($test_mode) {
   $paths_is_ok = $true
 
-  #протестировать параметры и конфиг
-  Write-Host 'Тестирование переданных параметров'
+  #РїСЂРѕС‚РµСЃС‚РёСЂРѕРІР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ Рё РєРѕРЅС„РёРі
+  Write-Host 'РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РїРµСЂРµРґР°РЅРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ'
   #Write-Host 'paths_is_ok: ' $paths_is_ok
   $paths_is_ok = $paths_is_ok -And (show_test_path -PathType Container -Path $local_git_repo_path)
   #Write-Host 'paths_is_ok: ' $paths_is_ok
@@ -96,49 +96,49 @@ if($test_mode) {
     }
   }
 
-  #Скопировать описание комплектов
+  #РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РѕРїРёСЃР°РЅРёРµ РєРѕРјРїР»РµРєС‚РѕРІ
   $sets_description = $settings_xml.DocumentElement.sets_description.path
   $sets_description_path = $local_git_repo_path + "\" + $sets_description
   $paths_is_ok = $paths_is_ok -And (show_test_path -PathType Leaf -Path $sets_description_path)
 
   if(-not $paths_is_ok) {
-    Write-Host "Есть ошибки в параметрах" -ForegroundColor Red
+    Write-Host "Р•СЃС‚СЊ РѕС€РёР±РєРё РІ РїР°СЂР°РјРµС‚СЂР°С…" -ForegroundColor Red
     break
   } else {
-    Write-Host "Параметры корректны" -ForegroundColor Green
+    Write-Host "РџР°СЂР°РјРµС‚СЂС‹ РєРѕСЂСЂРµРєС‚РЅС‹" -ForegroundColor Green
   }
 }
 
 
 if($create_build) {
-  # ============================ ПРОВЕРКА НАЛИЧИЯ НЕЗАКОММИЧЕННЫХ ИЗМЕНЕНИЙ =====================================
+  # ============================ РџР РћР’Р•Р РљРђ РќРђР›РР§РРЇ РќР•Р—РђРљРћРњРњРР§Р•РќРќР«РҐ РР—РњР•РќР•РќРР™ =====================================
   $git_status = git -C $local_git_repo_path status
   $git_status_str = [string]$git_status
 
   if(-Not $git_status_str.Contains("nothing to commit")){
-    Write-Host "Невозможно выполнить операцию, имеются неотправленные локальные фиксации или изменения. Отправьте и повторите попытку."
+    Write-Host "РќРµРІРѕР·РјРѕР¶РЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ РѕРїРµСЂР°С†РёСЋ, РёРјРµСЋС‚СЃСЏ РЅРµРѕС‚РїСЂР°РІР»РµРЅРЅС‹Рµ Р»РѕРєР°Р»СЊРЅС‹Рµ С„РёРєСЃР°С†РёРё РёР»Рё РёР·РјРµРЅРµРЅРёСЏ. РћС‚РїСЂР°РІСЊС‚Рµ Рё РїРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ."
     Break
   }
 
-  # =========================== ПОДГОТОВКА КОМПЛЕКТОВ ===================================
+  # =========================== РџРћР”Р“РћРўРћР’РљРђ РљРћРњРџР›Р•РљРўРћР’ ===================================
   $settings_xml = [xml](Get-Content $create_builds_config -Encoding UTF8)
 
   foreach($set_info in $settings_xml.DocumentElement.set_infos.SelectNodes("set_info")){
   
     $d = Get-Date
-    Write-Host 'Начало обработки комплекта ' $set_info.folder_name '  ' $d
+    Write-Host 'РќР°С‡Р°Р»Рѕ РѕР±СЂР°Р±РѕС‚РєРё РєРѕРјРїР»РµРєС‚Р° ' $set_info.folder_name '  ' $d
   
-    # папка комплекта
+    # РїР°РїРєР° РєРѕРјРїР»РµРєС‚Р°
     $new_set_path = Join-Path -Path $version_folder -ChildPath $set_info.folder_name
   
     foreach($pack_info in $set_info.SelectNodes("pack_info")){
    
-      # Откатить изменения номера билда
-      Write-Host '    Откат изменений в git-репозитории: ' $git_reset_result
+      # РћС‚РєР°С‚РёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РЅРѕРјРµСЂР° Р±РёР»РґР°
+      Write-Host '    РћС‚РєР°С‚ РёР·РјРµРЅРµРЅРёР№ РІ git-СЂРµРїРѕР·РёС‚РѕСЂРёРё: ' $git_reset_result
       $git_reset_result = git -C $local_git_repo_path reset --hard
 	
       $config_full_path = Join-Path -Path $local_git_repo_path -ChildPath $pack_info.config_path
-      Write-Host '    Конфиг пакета: ' $config_full_path
+      Write-Host '    РљРѕРЅС„РёРі РїР°РєРµС‚Р°: ' $config_full_path
 	
       $pack_name = $pack_info.pack_name + '.dat'
       $new_pack_name = Join-Path -Path $new_set_path -ChildPath $pack_name
@@ -146,12 +146,12 @@ if($create_build) {
       $pack_name_xml = $pack_info.pack_name + '.xml'
       $new_pack_name_xml = Join-Path -Path $new_set_path -ChildPath $pack_name_xml
     
-      Write-Host "    Создание пакета " $new_pack_name
+      Write-Host "    РЎРѕР·РґР°РЅРёРµ РїР°РєРµС‚Р° " $new_pack_name
     
-      # DDS запускается с ключами: -d <Имя пакета> -c <Путь к конфигу>
+      # DDS Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ СЃ РєР»СЋС‡Р°РјРё: -d <РРјСЏ РїР°РєРµС‚Р°> -c <РџСѓС‚СЊ Рє РєРѕРЅС„РёРіСѓ>
       $argumentList = '-d ' + $new_pack_name + ' -c ' + $config_full_path
       Write-Host $dds_path $argumentList 
-      # старт DDS без ожидания завершения дочернего подпроцесса
+      # СЃС‚Р°СЂС‚ DDS Р±РµР· РѕР¶РёРґР°РЅРёСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РґРѕС‡РµСЂРЅРµРіРѕ РїРѕРґРїСЂРѕС†РµСЃСЃР°
       Start-Process -FilePath $dds_path -ArgumentList $argumentList -NoNewWindow -passthru | Wait-Process
       show_test_path -PathType Leaf -Path $new_pack_name
       show_test_path -PathType Leaf -Path $new_pack_name_xml
@@ -161,19 +161,19 @@ if($create_build) {
     foreach($file_info in $set_info.SelectNodes("file_info")){
       $copy_from = Join-Path -Path $local_git_repo_path -ChildPath $file_info.file_path
       $copy_to = Join-Path -Path $new_set_path -ChildPath $file_info.file_name
-      Write-Host 'Копирование ' $copy_from ' -->>  ' $copy_to
+      Write-Host 'РљРѕРїРёСЂРѕРІР°РЅРёРµ ' $copy_from ' -->>  ' $copy_to
 
       $current_data = Get-Item $copy_from 
       if ($current_data.PSIsContainer) {
         $s = New-Item -ItemType Directory -Force -Path $copy_to
         $copy_to = $new_set_path
       }
-      $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse –Force
+      $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse вЂ“Force
     }
 
   
-    # Скопировать доп. данные в созданный комплект
-    Write-Host "    Копирование доп.материалов в " $new_set_path
+    # РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РґРѕРї. РґР°РЅРЅС‹Рµ РІ СЃРѕР·РґР°РЅРЅС‹Р№ РєРѕРјРїР»РµРєС‚
+    Write-Host "    РљРѕРїРёСЂРѕРІР°РЅРёРµ РґРѕРї.РјР°С‚РµСЂРёР°Р»РѕРІ РІ " $new_set_path
     foreach($data in $settings_xml.DocumentElement.paths_for_copy_to_set.SelectNodes("path_for_copy_to_set")){
       Write-Host "      " $data.path
       $copy_from = Join-Path -Path $local_git_repo_path -ChildPath $data.path
@@ -184,25 +184,25 @@ if($create_build) {
         $s = New-Item -ItemType Directory -Force -Path $copy_to
         $copy_to = $new_set_path
       }
-      $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse –Force
+      $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse вЂ“Force
     }
 
 
     $d = Get-Date
-    Write-Host 'Завершена обработка комплекта ' $set_info.folder_name '  ' $d
+    Write-Host 'Р—Р°РІРµСЂС€РµРЅР° РѕР±СЂР°Р±РѕС‚РєР° РєРѕРјРїР»РµРєС‚Р° ' $set_info.folder_name '  ' $d
     Write-Host ""
   }
 
-  #Скопировать описание комплектов
+  #РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РѕРїРёСЃР°РЅРёРµ РєРѕРјРїР»РµРєС‚РѕРІ
   $sets_description = $settings_xml.DocumentElement.sets_description.path
   $sets_description_path = $local_git_repo_path + "\" + $sets_description
-  Write-Host 'Копирование описания комплектов ' $sets_description ' в ' $version_folder
-  Copy-Item -Path $sets_description_path -Destination $version_folder -Recurse –Force
+  Write-Host 'РљРѕРїРёСЂРѕРІР°РЅРёРµ РѕРїРёСЃР°РЅРёСЏ РєРѕРјРїР»РµРєС‚РѕРІ ' $sets_description ' РІ ' $version_folder
+  Copy-Item -Path $sets_description_path -Destination $version_folder -Recurse вЂ“Force
 } 
 
 
 if($create_zip) {
-  Write-Host 'Создание архивов созданных комплектов в ' $solution_folder
+  Write-Host 'РЎРѕР·РґР°РЅРёРµ Р°СЂС…РёРІРѕРІ СЃРѕР·РґР°РЅРЅС‹С… РєРѕРјРїР»РµРєС‚РѕРІ РІ ' $solution_folder
   $settings_xml = [xml](Get-Content $create_builds_config -Encoding UTF8)
 
   foreach($set_info in $settings_xml.DocumentElement.set_infos.SelectNodes("set_info")){

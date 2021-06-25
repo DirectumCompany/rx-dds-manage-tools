@@ -1,10 +1,10 @@
-# Старт сервисов rx
-Write-Host "Запускаем сервисы RX..."
+# РЎС‚Р°СЂС‚ СЃРµСЂРІРёСЃРѕРІ rx
+Write-Host "Р—Р°РїСѓСЃРєР°РµРј СЃРµСЂРІРёСЃС‹ RX..."
 
-# Старт iis
+# РЎС‚Р°СЂС‚ iis
 Start-Process -FilePath 'iisreset' -ArgumentList '/start' -NoNewWindow  -Wait
 
-# Старть DrxServiceRunnerLocal
+# РЎС‚Р°СЂС‚СЊ DrxServiceRunnerLocal
 Start-Service -Name "DrxServiceRunnerLocal"
 Start-Sleep -Seconds 2
 $service = Get-Service -Name "DrxServiceRunnerLocal"

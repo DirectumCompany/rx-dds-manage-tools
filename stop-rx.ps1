@@ -1,10 +1,10 @@
-# остановка сервисов rx
-Write-Host "Останавливаем сервисы RX..."
+# РѕСЃС‚Р°РЅРѕРІРєР° СЃРµСЂРІРёСЃРѕРІ rx
+Write-Host "РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРµСЂРІРёСЃС‹ RX..."
 
-# остановить iis
+# РѕСЃС‚Р°РЅРѕРІРёС‚СЊ iis
 Start-Process -FilePath 'iisreset' -ArgumentList '/stop' -NoNewWindow  -Wait
 
-# остановить DrxServiceRunnerLocal
+# РѕСЃС‚Р°РЅРѕРІРёС‚СЊ DrxServiceRunnerLocal
 Stop-Service -Name "DrxServiceRunnerLocal"
 Start-Sleep -Seconds 2
 $service = Get-Service -Name "DrxServiceRunnerLocal"

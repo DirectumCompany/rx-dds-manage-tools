@@ -1,13 +1,13 @@
-# очистка каталогов AppliedSolution
+# РѕС‡РёСЃС‚РєР° РєР°С‚Р°Р»РѕРіРѕРІ AppliedSolution
 Param ([string] $rx_config,
        [switch] $help)
 
-# ============================ ОБРАБОТКА ПАРАМЕТРОВ =====================================
+# ============================ РћР‘Р РђР‘РћРўРљРђ РџРђР РђРњР•РўР РћР’ =====================================
 if($help){
   Write-Host ""
-  Write-Host "delete-appliedsolution.ps1 - очистка каталогов AppliedSolution"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\delete-appliedsolution.ps1 -rx_config <имя файла с конфигом привязки к версии RX> [-help]"
+  Write-Host "delete-appliedsolution.ps1 - РѕС‡РёСЃС‚РєР° РєР°С‚Р°Р»РѕРіРѕРІ AppliedSolution"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\delete-appliedsolution.ps1 -rx_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРёРІСЏР·РєРё Рє РІРµСЂСЃРёРё RX> [-help]"
   Write-Host ""
   Break
 }
@@ -15,9 +15,9 @@ if($help){
 
 if($rx_config -eq ""){
   Write-Host ""
-  Write-Host "Не указан параметр -project_config"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\delete-appliedsolution.ps1 -rx_config <имя файла с конфигом привязки к версии RX> [-help]"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -project_config"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\delete-appliedsolution.ps1 -rx_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРёРІСЏР·РєРё Рє РІРµСЂСЃРёРё RX> [-help]"
   Write-Host ""
   Break
 }
@@ -25,7 +25,7 @@ if($rx_config -eq ""){
 $is_exist_rx_config = Test-Path $rx_config -PathType Leaf
 if(!$is_exist_rx_config){
   Write-Host ""
-  Write-Host "Файл " $rx_config " не существует."
+  Write-Host "Р¤Р°Р№Р» " $rx_config " РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."
   Write-Host ""
   Break
 }
@@ -38,7 +38,7 @@ function replace_macro_vars {
   return $value
 }
 
-# ============================ считаем список каталогов =============================
+# ============================ СЃС‡РёС‚Р°РµРј СЃРїРёСЃРѕРє РєР°С‚Р°Р»РѕРіРѕРІ =============================
 $settings_xml =  [xml](Get-Content $rx_config)
 $macro_vars = @()
 foreach($var in $settings_xml.DocumentElement.root_paths_rx.SelectNodes("var")){
@@ -51,12 +51,12 @@ foreach($var in $settings_xml.DocumentElement.appliedmodules.SelectNodes("var"))
   $appliedmodules_paths += @{'path'=$path}
 }
 
-# ============================= остановим сервисы =========================================
+# ============================= РѕСЃС‚Р°РЅРѕРІРёРј СЃРµСЂРІРёСЃС‹ =========================================
 Start-Process -FilePath 'iisreset' -ArgumentList '/stop' -NoNewWindow  -Wait
 Start-Process -FilePath 'net' -ArgumentList 'stop DrxServiceRunnerLocal' -NoNewWindow -Wait
 
-# ============================ ЧИСТКА AppliedModules =====================================
-Write-Host "Чистим AppliedModules..."
+# ============================ Р§РРЎРўРљРђ AppliedModules =====================================
+Write-Host "Р§РёСЃС‚РёРј AppliedModules..."
 foreach($p in $appliedmodules_paths) {
   $is_exist_path = Test-Path $p.path -PathType Container
   Write-Host "  " $p.path $is_exist_path
@@ -65,6 +65,7 @@ foreach($p in $appliedmodules_paths) {
   }
 }
 
-# ============================= запустим сервисы обратно =========================================
+# ============================= Р·Р°РїСѓСЃС‚РёРј СЃРµСЂРІРёСЃС‹ РѕР±СЂР°С‚РЅРѕ =========================================
 Start-Process -FilePath 'iisreset' -ArgumentList '/start' -NoNewWindow  -Wait
 Start-Process -FilePath 'net' -ArgumentList 'start DrxServiceRunnerLocal' -NoNewWindow  -Wait
+

@@ -1,4 +1,4 @@
-# запуск DDS для указанного проекта без возможности публикации
+# Р·Р°РїСѓСЃРє DDS РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїСЂРѕРµРєС‚Р° Р±РµР· РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСѓР±Р»РёРєР°С†РёРё
 Param ([string]$project_config,
        [switch] $help)
 
@@ -56,38 +56,38 @@ function replace_macro_vars {
   return $value
 }
 
-# ============================ ОБРАБОТКА ПАРАМЕТРОВ =====================================
+# ============================ РћР‘Р РђР‘РћРўРљРђ РџРђР РђРњР•РўР РћР’ =====================================
 if($help){
   Write-Host ""
-  Write-Host "run_ro.ps1 - запуск DDS для указанного проекта без возможности публикации"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\run_ro.ps1 -project_config <имя файла с конфигом проекта> [-help]"
-  Write-Host "Логика работы:"
-  Write-Host "	* создается копия файла _ConfigSettings.xml - _ConfigSettings_readonly.xml"
-  Write-Host "	* в _ConfigSettings_readonly.xml:"
-  Write-Host "		* меняются описания репозиториев"
-  Write-Host "		* опустошаются параметры  LOCAL_SERVER_RELATIVE_PATH, LOCAL_WORKFLOW_PATH, LOCAL_WORKER_PATH, LOCAL_WEB_RELATIVE_PATH, QUEUE_CONNECTION_STRING"
-  Write-Host "	* запускается DDS, которому передается _ConfigSettings_readonly.xml в качестве конфига. В запущенном DDS доступно редактирование исходников, но недоступна публикация."
-  Write-Host "Может использоваться для быстрого просмотра исходников без фактического переключения стендов. При этом может быть запущено несколько экземпляров DDS."
+  Write-Host "run_ro.ps1 - Р·Р°РїСѓСЃРє DDS РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїСЂРѕРµРєС‚Р° Р±РµР· РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСѓР±Р»РёРєР°С†РёРё"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\run_ro.ps1 -project_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРѕРµРєС‚Р°> [-help]"
+  Write-Host "Р›РѕРіРёРєР° СЂР°Р±РѕС‚С‹:"
+  Write-Host "	* СЃРѕР·РґР°РµС‚СЃСЏ РєРѕРїРёСЏ С„Р°Р№Р»Р° _ConfigSettings.xml - _ConfigSettings_readonly.xml"
+  Write-Host "	* РІ _ConfigSettings_readonly.xml:"
+  Write-Host "		* РјРµРЅСЏСЋС‚СЃСЏ РѕРїРёСЃР°РЅРёСЏ СЂРµРїРѕР·РёС‚РѕСЂРёРµРІ"
+  Write-Host "		* РѕРїСѓСЃС‚РѕС€Р°СЋС‚СЃСЏ РїР°СЂР°РјРµС‚СЂС‹  LOCAL_SERVER_RELATIVE_PATH, LOCAL_WORKFLOW_PATH, LOCAL_WORKER_PATH, LOCAL_WEB_RELATIVE_PATH, QUEUE_CONNECTION_STRING"
+  Write-Host "	* Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ DDS, РєРѕС‚РѕСЂРѕРјСѓ РїРµСЂРµРґР°РµС‚СЃСЏ _ConfigSettings_readonly.xml РІ РєР°С‡РµСЃС‚РІРµ РєРѕРЅС„РёРіР°. Р’ Р·Р°РїСѓС‰РµРЅРЅРѕРј DDS РґРѕСЃС‚СѓРїРЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РёСЃС…РѕРґРЅРёРєРѕРІ, РЅРѕ РЅРµРґРѕСЃС‚СѓРїРЅР° РїСѓР±Р»РёРєР°С†РёСЏ."
+  Write-Host "РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ Р±С‹СЃС‚СЂРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РёСЃС…РѕРґРЅРёРєРѕРІ Р±РµР· С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ СЃС‚РµРЅРґРѕРІ. РџСЂРё СЌС‚РѕРј РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РїСѓС‰РµРЅРѕ РЅРµСЃРєРѕР»СЊРєРѕ СЌРєР·РµРјРїР»СЏСЂРѕРІ DDS."
   Write-Host ""
   Break
 }
 
 if($project_config -eq ""){
-  Write-Host "Не указан параметр -project_config"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\run_ro.ps1 -project_config <имя файла с конфигом проекта> [-help]"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -project_config"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\run_ro.ps1 -project_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРѕРµРєС‚Р°> [-help]"
   Break
 }
 
-# ============================ ЧТЕНИЕ НОВЫХ ПАРАМЕТРОВ =====================================
-Write-Host "Читаем новые параметры конфигов..."
+# ============================ Р§РўР•РќРР• РќРћР’Р«РҐ РџРђР РђРњР•РўР РћР’ =====================================
+Write-Host "Р§РёС‚Р°РµРј РЅРѕРІС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РєРѕРЅС„РёРіРѕРІ..."
 $stand_xml =  [xml](Get-Content $project_config)
 
-# Считать какие переменные надо менять под стенд
+# РЎС‡РёС‚Р°С‚СЊ РєР°РєРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ РЅР°РґРѕ РјРµРЅСЏС‚СЊ РїРѕРґ СЃС‚РµРЅРґ
 $macro_vars = @()
 foreach($var in $stand_xml.DocumentElement.stand_vars.SelectNodes("var")){
-  # подменить ранее считанные макропеременные
+  # РїРѕРґРјРµРЅРёС‚СЊ СЂР°РЅРµРµ СЃС‡РёС‚Р°РЅРЅС‹Рµ РјР°РєСЂРѕРїРµСЂРµРјРµРЅРЅС‹Рµ
   $value = replace_macro_vars -value $var.value -macro_vars $macro_vars
   $macro_vars += @{$var.name=$value}
 }
@@ -118,8 +118,8 @@ foreach($block in $stand_xml.DocumentElement.stand_vars.block){
 }
 
 Do {
-  # Показать пользователю с какими параметрами будет произведена подмена
-  Write-Host 'Будет выполнено переключение на стенд со следующими параметрами:'
+  # РџРѕРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ СЃ РєР°РєРёРјРё РїР°СЂР°РјРµС‚СЂР°РјРё Р±СѓРґРµС‚ РїСЂРѕРёР·РІРµРґРµРЅР° РїРѕРґРјРµРЅР°
+  Write-Host 'Р‘СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅРѕ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° СЃС‚РµРЅРґ СЃРѕ СЃР»РµРґСѓСЋС‰РёРјРё РїР°СЂР°РјРµС‚СЂР°РјРё:'
   foreach($p in $macro_vars) {
      Write-Host '   ' $p.Keys[0] " = " $p.Values[0]
   }
@@ -129,26 +129,26 @@ Do {
      echo $s
   }
   Write-Host  "    </block>"
-  $answ = Read-Host "Продолжить (y/n)?"
+  $answ = Read-Host "РџСЂРѕРґРѕР»Р¶РёС‚СЊ (y/n)?"
 } While ($answ -notin 'y', 'n', 'Y', 'N')
 
 if($answ -in 'n', 'N') {
   break
 }
 
-#пройтись по каждому блоку переменных из settings
+#РїСЂРѕР№С‚РёСЃСЊ РїРѕ РєР°Р¶РґРѕРјСѓ Р±Р»РѕРєСѓ РїРµСЂРµРјРµРЅРЅС‹С… РёР· settings
 foreach($block in $settings_xml.DocumentElement.block){
   if($block.name -eq "config_files") {
-    # Для каждого блока переменных
-    #    - считать переменные
-    #    - поменять в них макропеременные
-    #    - пройтись по каждому файлу и подменить переменные
+    # Р”Р»СЏ РєР°Р¶РґРѕРіРѕ Р±Р»РѕРєР° РїРµСЂРµРјРµРЅРЅС‹С…
+    #    - СЃС‡РёС‚Р°С‚СЊ РїРµСЂРµРјРµРЅРЅС‹Рµ
+    #    - РїРѕРјРµРЅСЏС‚СЊ РІ РЅРёС… РјР°РєСЂРѕРїРµСЂРµРјРµРЅРЅС‹Рµ
+    #    - РїСЂРѕР№С‚РёСЃСЊ РїРѕ РєР°Р¶РґРѕРјСѓ С„Р°Р№Р»Сѓ Рё РїРѕРґРјРµРЅРёС‚СЊ РїРµСЂРµРјРµРЅРЅС‹Рµ
     foreach($config_file in $block.SelectNodes("config_file")){
       if($config_file.name -eq "sungero_development_studio_readonly") {
         $file = $config_file.file.Replace('!ddsroot!', $ddsroot_dir)
         $file_readonly = $file.Replace("_ConfigSettings.xml", "_ConfigSettings_readonly.xml")
         Copy-Item -Path $file -Destination $file_readonly
-        Write-Host "Корректируем конфиг: " $file_readonly
+        Write-Host "РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј РєРѕРЅС„РёРі: " $file_readonly
         $vars = @()
         foreach($variable in $config_file.SelectNodes("var")) {
           $value = replace_macro_vars -value $variable.value -macro_vars $macro_vars
@@ -160,9 +160,10 @@ foreach($block in $settings_xml.DocumentElement.block){
   }
 }
 
-# Подготовить и запустить DDS
+# РџРѕРґРіРѕС‚РѕРІРёС‚СЊ Рё Р·Р°РїСѓСЃС‚РёС‚СЊ DDS
 $dds_file = $ddsroot_dir + '\Bin\DevelopmentStudio.exe'
 $dds_config = $file_readonly
 $arg1 = '--multi-instance'
 $arg2 = '--settings'
 & $dds_file $arg1 $arg2 $dds_config
+

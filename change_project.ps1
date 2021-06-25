@@ -1,4 +1,4 @@
-# переключение между разными прикладными проектами в рамках одной версии RX
+# РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РјРµР¶РґСѓ СЂР°Р·РЅС‹РјРё РїСЂРёРєР»Р°РґРЅС‹РјРё РїСЂРѕРµРєС‚Р°РјРё РІ СЂР°РјРєР°С… РѕРґРЅРѕР№ РІРµСЂСЃРёРё RX
 Param ([string] $project_config,
        [switch] $test_mode,
        [switch] $confirm,
@@ -66,14 +66,14 @@ function replace_macro_vars {
   return $value
 }
 
-# ============================ ОБРАБОТКА ПАРАМЕТРОВ =====================================
+# ============================ РћР‘Р РђР‘РћРўРљРђ РџРђР РђРњР•РўР РћР’ =====================================
 if($help){
   Write-Host ""
-  Write-Host "change_project.ps1 - переключение между разными прикладными проектами в рамках одной версии RX"
-  Write-Host "Проект - комплет *база данных* + *хранилище документов* + *исходники*."
-  Write-Host "Формат вызова:"
-  Write-Host "   .\change_project.ps1 -project_config <имя файла с конфигом проекта> [-test_mode] [-help]"
-  Write-Host "Включение режима test_mode позволяет сымитировать корректировку конфигов - конфиги не правятся, но рядом с ними создаются файлы \*.xml_test с новыми данными."
+  Write-Host "change_project.ps1 - РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РјРµР¶РґСѓ СЂР°Р·РЅС‹РјРё РїСЂРёРєР»Р°РґРЅС‹РјРё РїСЂРѕРµРєС‚Р°РјРё РІ СЂР°РјРєР°С… РѕРґРЅРѕР№ РІРµСЂСЃРёРё RX"
+  Write-Host "РџСЂРѕРµРєС‚ - РєРѕРјРїР»РµС‚ *Р±Р°Р·Р° РґР°РЅРЅС‹С…* + *С…СЂР°РЅРёР»РёС‰Рµ РґРѕРєСѓРјРµРЅС‚РѕРІ* + *РёСЃС…РѕРґРЅРёРєРё*."
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\change_project.ps1 -project_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРѕРµРєС‚Р°> [-test_mode] [-help]"
+  Write-Host "Р’РєР»СЋС‡РµРЅРёРµ СЂРµР¶РёРјР° test_mode РїРѕР·РІРѕР»СЏРµС‚ СЃС‹РјРёС‚РёСЂРѕРІР°С‚СЊ РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєСѓ РєРѕРЅС„РёРіРѕРІ - РєРѕРЅС„РёРіРё РЅРµ РїСЂР°РІСЏС‚СЃСЏ, РЅРѕ СЂСЏРґРѕРј СЃ РЅРёРјРё СЃРѕР·РґР°СЋС‚СЃСЏ С„Р°Р№Р»С‹ \*.xml_test СЃ РЅРѕРІС‹РјРё РґР°РЅРЅС‹РјРё."
   Write-Host ""
   Break
 }
@@ -81,37 +81,37 @@ if($help){
 
 if($project_config -eq ""){
   Write-Host ""
-  Write-Host "Не указан параметр -project_config"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\change_project.ps1 -project_config <имя файла с конфигом проекта> [-test_mode] [-help]"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -project_config"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\change_project.ps1 -project_config <РёРјСЏ С„Р°Р№Р»Р° СЃ РєРѕРЅС„РёРіРѕРј РїСЂРѕРµРєС‚Р°> [-test_mode] [-help]"
   Write-Host ""
   Break
 }
 
-# Проверить наличие конфига с описанием проекта
+# РџСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РєРѕРЅС„РёРіР° СЃ РѕРїРёСЃР°РЅРёРµРј РїСЂРѕРµРєС‚Р°
 $is_exist_project_config = Test-Path $project_config -PathType Leaf
 if(!$is_exist_project_config){
   Write-Host ""
-  Write-Host "Файл " $project_config " не существует."
+  Write-Host "Р¤Р°Р№Р» " $project_config " РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."
   Write-Host ""
   Break
 }
 
 
-# ============================ ЧТЕНИЕ НОВЫХ ПАРАМЕТРОВ =====================================
-Write-Host "Читаем новые параметры конфигов..."
+# ============================ Р§РўР•РќРР• РќРћР’Р«РҐ РџРђР РђРњР•РўР РћР’ =====================================
+Write-Host "Р§РёС‚Р°РµРј РЅРѕРІС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РєРѕРЅС„РёРіРѕРІ..."
 $stand_xml =  [xml](Get-Content $project_config)
 
-# Считать какие переменные надо менять под стенд
+# РЎС‡РёС‚Р°С‚СЊ РєР°РєРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ РЅР°РґРѕ РјРµРЅСЏС‚СЊ РїРѕРґ СЃС‚РµРЅРґ
 $macro_vars = @()
 foreach($var in $stand_xml.DocumentElement.stand_vars.SelectNodes("var")){
-  # подменить ранее считанные макропеременные
+  # РїРѕРґРјРµРЅРёС‚СЊ СЂР°РЅРµРµ СЃС‡РёС‚Р°РЅРЅС‹Рµ РјР°РєСЂРѕРїРµСЂРµРјРµРЅРЅС‹Рµ
   $value = replace_macro_vars -value $var.value -macro_vars $macro_vars
   $macro_vars += @{$var.name=$value}
 }
 
 
-# Считать файл с описанием конфигов требуемой версии RX
+# РЎС‡РёС‚Р°С‚СЊ С„Р°Р№Р» СЃ РѕРїРёСЃР°РЅРёРµРј РєРѕРЅС„РёРіРѕРІ С‚СЂРµР±СѓРµРјРѕР№ РІРµСЂСЃРёРё RX
 foreach($var in $stand_xml.DocumentElement.rx_config_file.SelectNodes("var")){
   if($var.file -eq "rx_config") {
     $rx_config = $var.value
@@ -121,11 +121,11 @@ foreach($var in $stand_xml.DocumentElement.rx_config_file.SelectNodes("var")){
     break
   }
 }
-# проверить наличие файла привязки к версии RX
+# РїСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ С„Р°Р№Р»Р° РїСЂРёРІСЏР·РєРё Рє РІРµСЂСЃРёРё RX
 $is_exist_rx_config = Test-Path $rx_config -PathType Leaf
 if(!$is_exist_rx_config){
   Write-Host ""
-  Write-Host "Не найден файл привязки к версии RX " $rx_config 
+  Write-Host "РќРµ РЅР°Р№РґРµРЅ С„Р°Р№Р» РїСЂРёРІСЏР·РєРё Рє РІРµСЂСЃРёРё RX " $rx_config 
   Write-Host ""
   Break
 }
@@ -143,19 +143,19 @@ foreach($var in $settings_xml.DocumentElement.root_paths_rx.SelectNodes("var")){
     $ddsroot_dir = $var.value
   }
 }
-# проверить наличие папки wwwroot
+# РїСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РїР°РїРєРё wwwroot
 $is_exist_wwwroot_dir = Test-Path $wwwroot_dir -PathType Container
 if(!$is_exist_wwwroot_dir){
   Write-Host ""
-  Write-Host "Не найден каталог wwwroot: " $wwwroot_dir 
+  Write-Host "РќРµ РЅР°Р№РґРµРЅ РєР°С‚Р°Р»РѕРі wwwroot: " $wwwroot_dir 
   Write-Host ""
   Break
 }
-# проверить наличие папки с dds
+# РїСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РїР°РїРєРё СЃ dds
 $is_exist_ddsroot_dir = Test-Path $ddsroot_dir -PathType Container
 if(!$is_exist_ddsroot_dir){
   Write-Host ""
-  Write-Host "Не найден каталог c DDS: " $ddsroot_dir 
+  Write-Host "РќРµ РЅР°Р№РґРµРЅ РєР°С‚Р°Р»РѕРі c DDS: " $ddsroot_dir 
   Write-Host ""
   Break
 }
@@ -179,12 +179,12 @@ foreach($var in $settings_xml.DocumentElement.appliedmodules.SelectNodes("var"))
 }
 
 Do {
-  # Показать пользователю с какими параметрами будет произведена подмена
-  Write-Host 'Будет выполнено переключение на стенд со следующими параметрами:'
+  # РџРѕРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ СЃ РєР°РєРёРјРё РїР°СЂР°РјРµС‚СЂР°РјРё Р±СѓРґРµС‚ РїСЂРѕРёР·РІРµРґРµРЅР° РїРѕРґРјРµРЅР°
+  Write-Host 'Р‘СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅРѕ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° СЃС‚РµРЅРґ СЃРѕ СЃР»РµРґСѓСЋС‰РёРјРё РїР°СЂР°РјРµС‚СЂР°РјРё:'
   foreach($p in $macro_vars) {
      Write-Host '   ' $p.Keys[0] " = " -NoNewLine 
      if(($p.Keys[0] -eq "!DATABASE!") -or ($p.Keys[0] -eq "!DOC_ROOT_DIRECTORY!") -or ($p.Keys[0] -eq "!GIT_ROOT_DIRECTORY!")) {
-       # значения критичных переменных вывести с выделением цветом
+       # Р·РЅР°С‡РµРЅРёСЏ РєСЂРёС‚РёС‡РЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С… РІС‹РІРµСЃС‚Рё СЃ РІС‹РґРµР»РµРЅРёРµРј С†РІРµС‚РѕРј
        Write-Host $p.Values[0] -ForegroundColor Green
      } else {
        Write-Host $p.Values[0]
@@ -204,7 +204,7 @@ Do {
   }
   Write-Host  "    </block>"
   if( -not $confirm) {
-    $answ = Read-Host "Продолжить (y/n)?"
+    $answ = Read-Host "РџСЂРѕРґРѕР»Р¶РёС‚СЊ (y/n)?"
   } else {
     $answ = 'Y'
   }
@@ -215,11 +215,11 @@ if($answ -in 'n', 'N') {
 }
 
 if (!$test_mode) {
-  ## ============================ ОСТАНОВКА СЛУЖБ =====================================
+  ## ============================ РћРЎРўРђРќРћР’РљРђ РЎР›РЈР–Р‘ =====================================
   & "$PSScriptRoot\stop-rx.ps1"
 
-  # ============================ ЧИСТКА AppliedModules =====================================
-  Write-Host "Чистим AppliedModules..."
+  # ============================ Р§РРЎРўРљРђ AppliedModules =====================================
+  Write-Host "Р§РёСЃС‚РёРј AppliedModules..."
   foreach($p in $appliedmodules_paths) {
     $is_exist_path = Test-Path $p.path -PathType Container
     Write-Host "  " $p.path $is_exist_path
@@ -230,17 +230,17 @@ if (!$test_mode) {
   }
 }
 
-#пройтись по каждому блоку переменных из settings
+#РїСЂРѕР№С‚РёСЃСЊ РїРѕ РєР°Р¶РґРѕРјСѓ Р±Р»РѕРєСѓ РїРµСЂРµРјРµРЅРЅС‹С… РёР· settings
 foreach($block in $settings_xml.DocumentElement.block){
   if($block.name -eq "config_files") {
-    # Для каждого блока переменных
-    #    - считать переменные
-    #    - поменять в них макропеременные
-    #    - пройтись по каждому файлу и подменить переменные
+    # Р”Р»СЏ РєР°Р¶РґРѕРіРѕ Р±Р»РѕРєР° РїРµСЂРµРјРµРЅРЅС‹С…
+    #    - СЃС‡РёС‚Р°С‚СЊ РїРµСЂРµРјРµРЅРЅС‹Рµ
+    #    - РїРѕРјРµРЅСЏС‚СЊ РІ РЅРёС… РјР°РєСЂРѕРїРµСЂРµРјРµРЅРЅС‹Рµ
+    #    - РїСЂРѕР№С‚РёСЃСЊ РїРѕ РєР°Р¶РґРѕРјСѓ С„Р°Р№Р»Сѓ Рё РїРѕРґРјРµРЅРёС‚СЊ РїРµСЂРµРјРµРЅРЅС‹Рµ
     foreach($config_file in $block.SelectNodes("config_file")){
       switch ($config_file.name) {
         "registry" {
-          # подкорректировать реестр
+          # РїРѕРґРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°С‚СЊ СЂРµРµСЃС‚СЂ
           foreach($variable in $config_file.SelectNodes("var")) {
             $value = replace_macro_vars -value $variable.value -macro_vars $macro_vars
             Write-Host $config_file.file  " \ " $variable.name " \ " $value
@@ -248,12 +248,12 @@ foreach($block in $settings_xml.DocumentElement.block){
           }
         }
         "sungero_development_studio_readonly" {
-          # пропустить описание конфигов DDS для запуска без возможности публикации
+          # РїСЂРѕРїСѓСЃС‚РёС‚СЊ РѕРїРёСЃР°РЅРёРµ РєРѕРЅС„РёРіРѕРІ DDS РґР»СЏ Р·Р°РїСѓСЃРєР° Р±РµР· РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСѓР±Р»РёРєР°С†РёРё
           continue
         }
         default {
           $file = $config_file.file.Replace('!wwwroot!', $wwwroot_dir).Replace('!ddsroot!', $ddsroot_dir)
-          Write-Host "Корректируем конфиг: " $file
+          Write-Host "РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј РєРѕРЅС„РёРі: " $file
           $vars = @()
           foreach($variable in $config_file.SelectNodes("var")) {
             $value = replace_macro_vars -value $variable.value -macro_vars $macro_vars
@@ -271,7 +271,7 @@ foreach($block in $settings_xml.DocumentElement.block){
 }
 
 if (!$test_mode) {
-  ## ============================ ЗАПУСК СЛУЖБ =====================================
+  ## ============================ Р—РђРџРЈРЎРљ РЎР›РЈР–Р‘ =====================================
   & "$PSScriptRoot\start-rx.ps1"
 }
 
