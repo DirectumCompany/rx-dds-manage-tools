@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Пример заполнения конфига стенда -->
+<!-- Пример заполнения конфига проекта для RX 3.3 -->
 <settings>
   <stand_vars>
-     <!-- Индивидуальные параметры каждого стенда -->
+     <!-- Индивидуальные параметры каждого проекта -->
      <!-- имя БД -->
      <var name="!DATABASE!" value="my_database"/>
      <!-- корневая папка с документами -->
@@ -16,7 +16,7 @@
      </block>
 
      <!-- Параметры привязки к особенностям рабочего места разработчика
-          Как правило не требуется менять под разные стенды
+          Как правило не требуется менять под разные проекты
       -->
      <!-- сервер БД-->
      <var name="!DATABASE_SERVER!" value="my_sqlserver"/>
@@ -29,6 +29,10 @@
      <!-- CONNECTION_STRING к rabbitmq -->
      <var name="!QUEUE_CONNECTION_STRING!" value="userName=rx;password=11111;hostName=127.0.0.1;port=5672;exchange=directumrx_c207568e-e735-4f3c-91ce-65681f1981dd;virtualHost=rx"/>
   </stand_vars>
+  <SymLinks>
+     <var name="!DOC_ROOT_DIRECTORY_SYMLINK!" value =""/>
+     <var name="!GIT_ROOT_DIRECTORY_SYMLINK!" value=""/>
+  </SymLinks>
   <rx_config_file>
      <!-- конфиг привязки к версии RX -->
      <var file="rx_config" value=".\configrx\_rx33_config_1.1.xml"/>

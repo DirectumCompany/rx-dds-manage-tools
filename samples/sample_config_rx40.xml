@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Пример заполнения конфига проекта для RX 4.0-->
+<settings>
+  <stand_vars>
+     <!-- Индивидуальные параметры каждого проекта -->
+     <!-- имя БД -->
+     <var name="!DATABASE!" value="my_database"/>
+     <!-- корневая папка с документами -->
+     <var name="!DOC_ROOT_DIRECTORY!" value ="C:\RXData\test_stand"/>
+     <!-- корневая папка с исходниками -->
+     <var name="!GIT_ROOT_DIRECTORY!" value="C:\rx"/>
+     <!-- описание репозиториев -->
+     <block name="REPOSITORIES">	  
+  	<repository folderName="clr_Base"  solutionType="Base" url=""/>
+ 	<repository folderName="clr_Work"  solutionType="Work" url=""/>
+     </block>
+
+     <!-- Параметры привязки к особенностям рабочего места разработчика
+          Как правило не требуется менять под разные проекты
+      -->
+     <!-- сервер БД-->
+     <var name="!DATABASE_SERVER!" value="my_sqlserver"/>
+     <!-- тип движка сервера БД-->
+     <var name="!DATABASE_ENGINE!" value="MsSql"/>
+     <!-- способ аутентификации -->
+     <var name="!AUTH_INFO!" value="Integrated Security=True"/>
+     <!-- CONNECTION_STRING - без параметра Application Name -->
+     <var name="!CONNECTION_STRING!" value="Data Source=!DATABASE_SERVER!;Initial Catalog=!DATABASE!;!AUTH_INFO!;Connect Timeout=30"/>
+     <!-- CONNECTION_STRING к rabbitmq -->
+     <var name="!QUEUE_CONNECTION_STRING!" value="userName=rx;password=11111;hostName=127.0.0.1;port=5672;exchange=directumrx_c207568e-e735-4f3c-91ce-65681f1981dd;virtualHost=rx"/>
+  </stand_vars>
+  <SymLinks>
+     <var name="!DOC_ROOT_DIRECTORY_SYMLINK!" value =""/>
+     <var name="!GIT_ROOT_DIRECTORY_SYMLINK!" value=""/>
+  </SymLinks>
+  <rx_config_file>
+     <!-- конфиг привязки к версии RX -->
+     <var file="rx_config" value=".\configrx\_rx40_config_1.1.xml"/>
+  </rx_config_file>
+  <version>
+    <var name="format_version" value="1.1"/>
+  </version>
+</settings>

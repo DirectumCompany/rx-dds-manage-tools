@@ -2,7 +2,8 @@
 Param ([string] $project_config,
        [switch] $test_mode,
        [switch] $confirm,
-       [switch] $help)
+       [switch] $help,
+       [switch] $show_detail_info)
 
 function new_file_name($file_name, $test_mode) {
   if(!$test_mode) {
@@ -102,11 +103,47 @@ if(!$is_exist_project_config){
 Write-Host "Читаем новые параметры конфигов..."
 $stand_xml =  [xml](Get-Content $project_config)
 
+$git_root_directiry_symlink = ""
+$doc_root_directiry_symlink = ""
+$git_root_directiry_physical_path = ""
+$doc_root_directiry_physical_path = ""
+
+# Считать настройки для символических ссылок на каталоги GIT_ROOT_DIRECTORY и DOC_ROOT_DIRECTORY
+foreach($var in $stand_xml.settings.ChildNodes) {
+  if ($var.Name -eq "symlinks") {
+    foreach($var in $stand_xml.DocumentElement.symlinks.SelectNodes("var")){
+      if ($var.name -eq "!DOC_ROOT_DIRECTORY_SYMLINK!") {
+        $doc_root_directiry_symlink = $var.value
+      }
+      if ($var.name -eq "!GIT_ROOT_DIRECTORY_SYMLINK!") {
+        $git_root_directiry_symlink = $var.value
+      }
+    }
+  }
+}
+
 # Считать какие переменные надо менять под стенд
 $macro_vars = @()
 foreach($var in $stand_xml.DocumentElement.stand_vars.SelectNodes("var")){
   # подменить ранее считанные макропеременные
   $value = replace_macro_vars -value $var.value -macro_vars $macro_vars
+
+  if ($var.name -eq "!GIT_ROOT_DIRECTORY!") {
+    $macro_vars += @{"!GIT_ROOT_DIRECTORY_PHYSICAL_PATH!"=$value}
+    $git_root_directiry_physical_path = $value
+    if ($git_root_directiry_symlink -ne "") {
+      $value = $git_root_directiry_symlink
+    }
+  }
+
+  if ($var.name -eq "!DOC_ROOT_DIRECTORY!") {
+    $macro_vars += @{"!DOC_ROOT_DIRECTORY_PHYSICAL_PATH!"=$value}
+    $doc_root_directiry_physical_path = $value
+    if ($doc_root_directiry_symlink -ne "") {
+      $value = $doc_root_directiry_symlink
+    }
+  }
+
   $macro_vars += @{$var.name=$value}
 }
 
@@ -180,15 +217,45 @@ foreach($var in $settings_xml.DocumentElement.appliedmodules.SelectNodes("var"))
 
 Do {
   # Показать пользователю с какими параметрами будет произведена подмена
-  Write-Host 'Будет выполнено переключение на стенд со следующими параметрами:'
-  foreach($p in $macro_vars) {
-     Write-Host '   ' $p.Keys[0] " = " -NoNewLine 
-     if(($p.Keys[0] -eq "!DATABASE!") -or ($p.Keys[0] -eq "!DOC_ROOT_DIRECTORY!") -or ($p.Keys[0] -eq "!GIT_ROOT_DIRECTORY!")) {
-       # значения критичных переменных вывести с выделением цветом
-       Write-Host $p.Values[0] -ForegroundColor Green
-     } else {
-       Write-Host $p.Values[0]
-     }
+  Write-Host 'Будет выполнено переключение на проект со следующими параметрами:'
+
+  if ($show_detail_info) {
+    Write-Host '    git_root_directiry_symlink = ' -NoNewLine 
+    Write-Host $git_root_directiry_symlink -ForegroundColor Green
+    Write-Host '    doc_root_directiry_symlink = ' -NoNewLine 
+    Write-Host $doc_root_directiry_symlink -ForegroundColor Green
+    foreach($p in $macro_vars) {
+       Write-Host '   ' $p.Keys[0] " = " -NoNewLine 
+       if(($p.Keys[0] -eq "!DATABASE!") -or ($p.Keys[0] -eq "!DOC_ROOT_DIRECTORY!") -or ($p.Keys[0] -eq "!DOC_ROOT_DIRECTORY_PHYSICAL_PATH!") -or 
+          ($p.Keys[0] -eq "!GIT_ROOT_DIRECTORY!") -or ($p.Keys[0] -eq "!GIT_ROOT_DIRECTORY_PHYSICAL_PATH!")) {
+         # значения критичных переменных вывести с выделением цветом
+         Write-Host $p.Values[0] -ForegroundColor Green
+       } else {
+         Write-Host $p.Values[0]
+       }
+    }
+  } else {
+    Write-Host '   Server = ' -NoNewLine 
+    Write-Host ($macro_vars | Where-Object Keys -eq "!DATABASE_SERVER!").Values[0] -ForegroundColor Green
+    Write-Host '   Database = ' -NoNewLine 
+    Write-Host ($macro_vars | Where-Object Keys -eq "!DATABASE!").Values[0] -ForegroundColor Green
+
+    Write-Host '   DOC_ROOT_DIRECTORY = ' -NoNewLine 
+    $s = ($macro_vars | Where-Object Keys -eq "!DOC_ROOT_DIRECTORY_PHYSICAL_PATH!").Values[0]
+    if ($doc_root_directiry_symlink -eq "" ) {
+      Write-Host $s -ForegroundColor Green
+    } else {
+      $s += " -> " + ($macro_vars | Where-Object Keys -eq "!DOC_ROOT_DIRECTORY!").Values[0]
+      Write-Host  $s -ForegroundColor Green
+    }
+    Write-Host '   GIT_ROOT_DIRECTORY = ' -NoNewLine 
+    $s = ($macro_vars | Where-Object Keys -eq "!GIT_ROOT_DIRECTORY_PHYSICAL_PATH!").Values[0]
+    if ($git_root_directiry_symlink -eq "" ) {
+      Write-Host $s -ForegroundColor Green
+    } else {
+      $s += " -> " + ($macro_vars | Where-Object Keys -eq "!GIT_ROOT_DIRECTORY!").Values[0]
+      Write-Host  $s -ForegroundColor Green
+    }
   }
   Write-Host  '    <block name="REPOSITORIES">'
   foreach($p in $dds_repos_params) {
@@ -203,6 +270,7 @@ Do {
      #echo $s
   }
   Write-Host  "    </block>"
+
   if( -not $confirm) {
     $answ = Read-Host "Продолжить (y/n)?"
   } else {
@@ -271,6 +339,32 @@ foreach($block in $settings_xml.DocumentElement.block){
 }
 
 if (!$test_mode) {
+  #  Сделать симлинки для GIT_ROOT_DIRECTORY и DOC_ROOT_DIRECTORY
+  switch($PSVersionTable.PSVersion.Major)
+  {
+    4 {
+      if ($git_root_directiry_symlink -ne "") {
+        cmd /c rmdir $git_root_directiry_symlink /Q
+        cmd /c mklink $git_root_directiry_symlink /d  $git_root_directiry_physical_path 
+      }
+      if ($doc_root_directiry_symlink -ne "") {
+        cmd /c rmdir $doc_root_directiry_symlink /Q
+        cmd /c mklink $doc_root_directiry_symlink /d  $doc_root_directiry_physical_path 
+      }
+    }
+    5 {
+      if ($doc_root_directiry_symlink -ne "") {
+        New-Item -ItemType SymbolicLink -Path $git_root_directiry_symlink -Target $git_root_directiry_physical_path -Force
+      }
+      if ($doc_root_directiry_symlink -ne "") {
+        New-Item -ItemType SymbolicLink -Path $doc_root_directiry_symlink -Target $doc_root_directiry_physical_path -Force
+      }
+    }
+    default {
+       Write-Host "Неизвестная верси Powershell " $PSVersionTable.PSVersion
+    }
+  }
+
   ## ============================ ЗАПУСК СЛУЖБ =====================================
   & "$PSScriptRoot\start-rx.ps1"
 }
@@ -278,3 +372,5 @@ if (!$test_mode) {
 if( -not $confirm) {
   pause
 }
+
+
