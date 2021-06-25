@@ -1,26 +1,26 @@
-# переключение на другую версию RX
+# РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° РґСЂСѓРіСѓСЋ РІРµСЂСЃРёСЋ RX
 Param ([string]$pathTargetVersion,
        [switch] $help)
 
-# ============================ ОБРАБОТКА ПАРАМЕТРОВ =====================================
+# ============================ РћР‘Р РђР‘РћРўРљРђ РџРђР РђРњР•РўР РћР’ =====================================
 if($help){
-  Write-Host ""
-  Write-Host "change_rxversion.ps1 - переключение на другую версию RX"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\change_rxversion.ps1 -pathTargetVersion <имя папки с каталогами wwwroot и 'Sungero Development Studio' [-help]"
-  Write-Host "Предполагается, что в pathTargetVersion находятся два каталога: wwwroot и 'Sungero Development Studio'"
-  Write-Host "Выполнять при отключенном IIS и DrxServiceRunnerLocal"
-  Write-Host "Предполагается, что внутри папки, переданной в параметре pathTargetVersion находятся две папки: 'wwwroot' и 'Sungero Development Studio'."
-  Write-Host "Суть переключения - создаются simlink-и на C:\inetpub\wwwroot\ и 'C:\Program Files\Directum Company\Sungero Development Studio'."
+  Write-Host " "
+  Write-Host "change_rxversion.ps1 - РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° РґСЂСѓРіСѓСЋ РІРµСЂСЃРёСЋ RX"
+  Write-Host "Р¤РѕСЂРјР°С‚ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\change_rxversion.ps1 -pathTargetVersion <РёРјСЏ РїР°РїРєРё СЃ РєР°С‚Р°Р»РѕРіР°РјРё wwwroot Рё 'Sungero Development Studio' [-help]"
+  Write-Host "РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РІ pathTargetVersion РЅР°С…РѕРґСЏС‚СЃСЏ РґРІР° РєР°С‚Р°Р»РѕРіР°: wwwroot Рё 'Sungero Development Studio'"
+  Write-Host "Р’С‹РїРѕР»РЅСЏС‚СЊ РїСЂРё РѕС‚РєР»СЋС‡РµРЅРЅРѕРј IIS Рё DrxServiceRunnerLocal"
+  Write-Host "РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РІРЅСѓС‚СЂРё РїР°РїРєРё, РїРµСЂРµРґР°РЅРЅРѕР№ РІ РїР°СЂР°РјРµС‚СЂРµ pathTargetVersion РЅР°С…РѕРґСЏС‚СЃСЏ РґРІРµ РїР°РїРєРё: 'wwwroot' Рё 'Sungero Development Studio'."
+  Write-Host "РЎСѓС‚СЊ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ - СЃРѕР·РґР°СЋС‚СЃСЏ simlink-Рё РЅР° C:\inetpub\wwwroot\ Рё 'C:\Program Files\Directum Company\Sungero Development Studio'."
   Write-Host ""
   Break
 }
 
 if($pathTargetVersion -eq ""){
   Write-Host ""
-  Write-Host "Не указан параметр -pathTargetVersion"
-  Write-Host "Пример вызова:"
-  Write-Host "   .\change_rxversion.ps1 -pathTargetVersion <имя папки с каталогами wwwroot и 'Sungero Development Studio' [-help]"
+  Write-Host "РќРµ СѓРєР°Р·Р°РЅ РїР°СЂР°РјРµС‚СЂ -pathTargetVersion"
+  Write-Host "РџСЂРёРјРµСЂ РІС‹Р·РѕРІР°:"
+  Write-Host "   .\change_rxversion.ps1 -pathTargetVersion <РёРјСЏ РїР°РїРєРё СЃ РєР°С‚Р°Р»РѕРіР°РјРё wwwroot Рё 'Sungero Development Studio' [-help]"
   Write-Host ""
   Break
 }
@@ -32,28 +32,28 @@ $requiredDDS = "C:\Program Files\Directum Company\Sungero Development Studio"
 $realWWWRoot = $pathTargetVersion + "\wwwroot"
 $realDDS =   $pathTargetVersion + "\Sungero Development Studio"
 
-# ============================ ОСТАНОВКА СЛУЖБ =====================================
+# ============================ РћРЎРўРђРќРћР’РљРђ РЎР›РЈР–Р‘ =====================================
 .\stop-rx.ps1
 
 
 switch($PSVersionTable.PSVersion.Major)
 {
   4 {
-    #  Сделать симлинки для C:\inetpub\wwwroot\
+    #  РЎРґРµР»Р°С‚СЊ СЃРёРјР»РёРЅРєРё РґР»СЏ C:\inetpub\wwwroot\
     cmd /c rmdir $requiredWWWRoot /Q
     cmd /c mklink $requiredWWWRoot /d  $realWWWRoot
-    #  Сделать симлинки для C:\Program Files\Directum Company\Sungero Development Studio
+    #  РЎРґРµР»Р°С‚СЊ СЃРёРјР»РёРЅРєРё РґР»СЏ C:\Program Files\Directum Company\Sungero Development Studio
     cmd /c rmdir $requiredDDS /Q
     cmd /c mklink $requiredDDS /d  $realDDS
   }
   5 {
-    #  Сделать симлинки для C:\inetpub\wwwroot\
+    #  РЎРґРµР»Р°С‚СЊ СЃРёРјР»РёРЅРєРё РґР»СЏ C:\inetpub\wwwroot\
     New-Item -ItemType SymbolicLink -Path $requiredWWWRoot -Target $realWWWRoot -Force
-    #  Сделать симлинки для C:\Program Files\Directum Company\Sungero Development Studio
+    #  РЎРґРµР»Р°С‚СЊ СЃРёРјР»РёРЅРєРё РґР»СЏ C:\Program Files\Directum Company\Sungero Development Studio
     New-Item -ItemType SymbolicLink -Path $requiredDDS -Target $realDDS -Force
   }
   default {
-     Write-Host "Неизвестная верси Powershell " $PSVersionTable.PSVersion
+     Write-Host "РќРµРёР·РІРµСЃС‚РЅР°СЏ РІРµСЂСЃРё Powershell " $PSVersionTable.PSVersion
   }
 }
 
