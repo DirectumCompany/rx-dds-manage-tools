@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Для RX 4.0 -->
+<!-- Для RX 4.1 -->
 <settings>
   <version>
     <var name="format_version" value="1.1"/>
@@ -79,6 +79,18 @@
     </config_file>
 
     <config_file name="DrxIntegrationServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxIntegrationServiceLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxReportServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxReportServiceLocal_ConfigSettings.xml">
+       <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
+       <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
+       <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
+    </config_file>
+
+    <config_file name="DrxWidgetsServiceLocal_ConfigSettings" file="!wwwroot!\DrxServiceRunnerLocal\Conf\DrxWidgetsServiceLocal_ConfigSettings.xml">
        <var name="DATABASE_ENGINE" value="!DATABASE_ENGINE!"/>
        <var name="CONNECTION_STRING" value="!CONNECTION_STRING!;Application Name=DirectumRxLocal"/>
        <var name="QUEUE_CONNECTION_STRING" value="!QUEUE_CONNECTION_STRING!"/>
