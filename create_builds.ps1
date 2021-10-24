@@ -11,11 +11,11 @@ Param ([string]$dds_path,
 
 function show_test_path($PathType, $Path) {
   $result = Test-Path -PathType $PathType -Path $Path
-  Write-Host $Path -NoNewLine
+  Write-Host "      " $Path -NoNewLine
   if( -not $result) {
-    Write-Host " not exist!" -ForegroundColor Red
+    Write-Host " не существует!" -ForegroundColor Red
   } else {
-    Write-Host " is ok!" -ForegroundColor Green
+    Write-Host " существует!" -ForegroundColor Green
   }
   return $result
 }
@@ -153,21 +153,16 @@ if($create_build) {
       Write-Host $dds_path $argumentList 
       # старт DDS без ожидания завершения дочернего подпроцесса
       Start-Process -FilePath $dds_path -ArgumentList $argumentList -NoNewWindow -passthru | Wait-Process
-      show_test_path -PathType Leaf -Path $new_pack_name
-      show_test_path -PathType Leaf -Path $new_pack_name_xml
+      $s = show_test_path -PathType Leaf -Path $new_pack_name
+      $s = show_test_path -PathType Leaf -Path $new_pack_name_xml
       Write-Host ""  
     }
 
     foreach($file_info in $set_info.SelectNodes("file_info")){
       $copy_from = Join-Path -Path $local_git_repo_path -ChildPath $file_info.file_path
       $copy_to = Join-Path -Path $new_set_path -ChildPath $file_info.file_name
-      Write-Host 'Копирование ' $copy_from ' -->>  ' $copy_to
 
-      $current_data = Get-Item $copy_from 
-      if ($current_data.PSIsContainer) {
-        $s = New-Item -ItemType Directory -Force -Path $copy_to
-        $copy_to = $new_set_path
-      }
+      Write-Host '    Копирование ' $copy_from ' -->>  ' $copy_to
       $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse –Force
     }
 
@@ -175,15 +170,14 @@ if($create_build) {
     # Скопировать доп. данные в созданный комплект
     Write-Host "    Копирование доп.материалов в " $new_set_path
     foreach($data in $settings_xml.DocumentElement.paths_for_copy_to_set.SelectNodes("path_for_copy_to_set")){
-      Write-Host "      " $data.path
       $copy_from = Join-Path -Path $local_git_repo_path -ChildPath $data.path
-      $copy_to = Join-Path -Path $new_set_path -ChildPath $data.path
-
-      $current_data = Get-Item $copy_from 
-      if ($current_data.PSIsContainer) {
-        $s = New-Item -ItemType Directory -Force -Path $copy_to
-        $copy_to = $new_set_path
+      if($data.HasAttribute("newpath")) {
+        $copy_to = Join-Path -Path $new_set_path -ChildPath $data.newpath
+      } else {
+        $copy_to = Join-Path -Path $new_set_path -ChildPath $data.path
       }
+
+      Write-Host "      " $copy_from "-->>" $copy_to
       $s = Copy-Item -Path $copy_from -Destination $copy_to -Recurse –Force
     }
 

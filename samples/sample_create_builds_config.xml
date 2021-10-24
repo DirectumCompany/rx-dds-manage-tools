@@ -28,7 +28,7 @@
 		<!--!Должны находиться в папке репозитория! -->
 		<path_for_copy_to_set path="Templates"/>
 		<path_for_copy_to_set path="changelog.md"/>
-		<path_for_copy_to_set path="Docs"/>
+		<path_for_copy_to_set path="Docs" newpath="Documents"/>
 	</paths_for_copy_to_set>
 	
 	<!-- Относительный путь к файлу с описанием комплектов (Должен находиться в папке репозитория) -->
