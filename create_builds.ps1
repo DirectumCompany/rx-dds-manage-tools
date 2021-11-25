@@ -131,11 +131,27 @@ if($create_build) {
     # папка комплекта
     $new_set_path = Join-Path -Path $version_folder -ChildPath $set_info.folder_name
   
-    foreach($pack_info in $set_info.SelectNodes("pack_info")){
-   
-      # Откатить изменения номера билда
+
+    # признак необходимости увеличить номер верси
+    if($set_info.HasAttribute("incrementversion")) {
+      $increment_version = " --increment-version " + $set_info.incrementversion
+      # если явно указано надо или менять номер версии
+      # то откат изменений выполняется перед началом обработки всего комплекта, а не перед каждым дистрибутивом
       Write-Host '    Откат изменений в git-репозитории: ' $git_reset_result
       $git_reset_result = git -C $local_git_repo_path reset --hard
+    } else {
+      $increment_version = ""
+    }
+
+
+    foreach($pack_info in $set_info.SelectNodes("pack_info")){
+   
+      # выполнить откат изменений в репозитории только в том случае, если явно не указана надо или нет увеличивать номер билда
+      # оставлено для совместимости
+      if ($increment_version -eq "") {
+        Write-Host '    Откат изменений в git-репозитории: ' $git_reset_result
+        $git_reset_result = git -C $local_git_repo_path reset --hard
+      }
 	
       $config_full_path = Join-Path -Path $local_git_repo_path -ChildPath $pack_info.config_path
       Write-Host '    Конфиг пакета: ' $config_full_path
@@ -149,7 +165,7 @@ if($create_build) {
       Write-Host "    Создание пакета " $new_pack_name
     
       # DDS запускается с ключами: -d <Имя пакета> -c <Путь к конфигу>
-      $argumentList = '-d ' + $new_pack_name + ' -c ' + $config_full_path
+      $argumentList = '-d ' + $new_pack_name + ' -c ' + $config_full_path + $increment_version
       Write-Host $dds_path $argumentList 
       # старт DDS без ожидания завершения дочернего подпроцесса
       Start-Process -FilePath $dds_path -ArgumentList $argumentList -NoNewWindow -passthru | Wait-Process
