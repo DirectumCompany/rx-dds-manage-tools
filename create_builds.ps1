@@ -4,10 +4,11 @@ Param ([string]$dds_path,
        [string]$create_builds_config,
        [string]$solution_folder,
        [string]$version_number,
-       [switch]$help,
+       [string]$mtd_for_version,
        [switch]$create_build,
-       [switch]$test_mode,
-       [switch]$create_zip)
+       [switch]$create_zip,
+       [switch]$help
+)
 
 function show_test_path($PathType, $Path) {
   $result = Test-Path -PathType $PathType -Path $Path
@@ -27,11 +28,18 @@ function show_test_path($PathType, $Path) {
 if($help){
   Write-Host ""
   Write-Host "create_builds.ps1 - подготовка инсталляционных комплектов при выпуске версии решения"
-  Write-Host "Формат вызова:"
-  Write-Host "   .\create_builds.ps1 -dds_path <путь к DevelopmentStudio.exe> -local_git_repo_path <папка с репозиторием решения> -create_builds_config <конфиг с описанием комплектов> -solution_folder <папка, в которую выгружаются комплекты> [-help] [-create_build|-create_zip|-test_mode]"
+  Write-Host "Параметры:"
+  Write-Host "  -dds_path - путь к DevelopmentStudio.exe. По умолчанию 'C:\Program Files\Directum Company\Sungero Development Studio\Bin\DevelopmentStudio.exe'"
+  Write-Host "  -local_git_repo_path - путь к локальному репозиторию решения"
+  Write-Host "  -create_builds_config - путь к конфигу, описывающему дистрибутивы, которые нужно собрать"
+  Write-Host "  -solution_folder - путь к каталогу, в котором будет создан каталог с билдом"
+  Write-Host "  -version_number - номер собираемой версии, может быть опущен, если указан параметр -mtd_for_version"
+  Write-Host "  -mtd_for_version - путь к mtd-файлу, из которого возьмется номер собираемой версии. Рекомендуется указывать mtd-файл из shared-каталога solution"
+  Write-Host "  -create_build - переключатель, указывающий, что нужно собрать билд. Если он не указан, то скрипт работает в режиме проверки параметров"
+  Write-Host "  -create_zip - переключаетель, указывающий на необходимость создать архивы для дистрибутивов"
+  Write-Host "  -help - вывод справки"
   Write-Host "Пример вызова:"
-  Write-Host "   .\create_builds.ps1 -local_git_repo_path 'C:\RX\AppSol' -create_builds_config 'C:\RX\AppSol\build\builds_config.xml' -solution_folder 'D:\Install\AppSol' -version_number '1.1.3421.0' -create_build"
-  Write-Host "Параметр dds_path может быть опущен. В этом случае используется значение по умолчанию - C:\Program Files\Directum Company\Sungero Development Studio\Bin\DevelopmentStudio.exe"
+  Write-Host "   .\create_builds.ps1 -local_git_repo_path 'C:\RX\AppSol' -create_builds_config 'C:\RX\AppSol\build\builds_config.xml' -solution_folder 'D:\Install\AppSol' -version_number '1.1.3421.0' -create_build -create-zip"
   Write-Host ""
   Break
 }
@@ -43,35 +51,54 @@ if($dds_path -eq ""){
 
 if($local_git_repo_path -eq ""){
   Write-Host "Не указан параметр -local_git_repo_path"
+  break
 }
 
 if($create_builds_config -eq ""){
   Write-Host "Не указан параметр -create_builds_config"
+  break
 }
 
 if($solution_folder -eq ""){
   Write-Host "Не указан параметр -solution_folder"
+  break
+}
+
+if(($version_number -eq "") -and ($mtd_for_version -eq "")){
+  Write-Host "Необходимо указать один из параметров -version_number или -mtd_for_version"
+  break
 }
 
 if($version_number -eq ""){
-  Write-Host "Не указан параметр -version_number"
+  if($mtd_for_version -eq ""){
+    Write-Host "Необходимо указать один из параметров -version_number или -mtd_for_version"
+    break
+  } else {
+    if ((Test-Path -PathType Leaf -Path $mtd_for_version)) {
+      # найти версию билда из mtd-файла
+      $mtd_file =  (Get-Content $mtd_for_version)
+      foreach($s in $mtd_file) {
+        if ($s.Contains('"Version":')) {
+          $version_number = $s.Split(":")[1].Trim().Replace('"','').Replace(',','').ToString()
+        }
+      }
+      if($version_number -eq "") {
+        Write-Host "В "+$mtd_file+" не найден номер версии"
+        break
+      }
+    }
+  }
 }
 
-if($dds_path -eq "" -or $local_git_repo_path -eq "" -or $create_builds_config -eq "" -or $solution_folder -eq "" -or $version_number -eq ""){
-  Write-Host "Пример вызова:"
-  Write-Host "   .\create_builds.ps1 -local_git_repo_path 'C:\RX\AppSol' -create_builds_config 'C:\RX\AppSol\build\builds_config.xml' -solution_folder 'D:\Install\AppSol' -version_number '1.1.3421.0' -create_build"
-  Break
-}
 
-
-$version_folder = Join-Path -Path $solution_folder -ChildPath $version_number
-
-if($test_mode) {
+if(!$create_build) {
+  #режим тестирования параметров
   $paths_is_ok = $true
 
   #протестировать параметры и конфиг
   Write-Host 'Тестирование переданных параметров'
   #Write-Host 'paths_is_ok: ' $paths_is_ok
+  $paths_is_ok = $paths_is_ok -And (show_test_path -PathType Leaf -Path $mtd_for_version)
   $paths_is_ok = $paths_is_ok -And (show_test_path -PathType Container -Path $local_git_repo_path)
   #Write-Host 'paths_is_ok: ' $paths_is_ok
   $paths_is_ok = $paths_is_ok -And (show_test_path -PathType Leaf -Path $create_builds_config)
@@ -109,6 +136,7 @@ if($test_mode) {
   }
 }
 
+$version_folder = Join-Path -Path $solution_folder -ChildPath $version_number
 
 if($create_build) {
   # ============================ ПРОВЕРКА НАЛИЧИЯ НЕЗАКОММИЧЕННЫХ ИЗМЕНЕНИЙ =====================================
