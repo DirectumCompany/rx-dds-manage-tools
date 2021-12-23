@@ -76,10 +76,14 @@ class ManageAppliedProject(BaseComponent):
                 all = All(self.config)
                 all.down()
 
-                # подменить конфиг
+                # скорректировать etc\config.yml
                 src_config = yaml_tools.load_yaml_from_file(project_config_path)
                 dst_config = yaml_tools.load_yaml_from_file(self.config_path)
                 dst_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]  = src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"].copy() 
+                dst_config["variables"]["purpose"] = src_config["variables"]["purpose"]
+                dst_config["variables"]["database"] = src_config["variables"]["database"]
+                dst_config["variables"]["home_path"] = src_config["variables"]["home_path"]
+                dst_config["variables"]["home_path_src"]  = src_config["variables"]["home_path_src"]
                 repos_as_str =""
                 for repo in src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]:
                     repos_as_str += f'"{repo.get("@folderName")}({repo.get("@solutionType")}) - {repo.get("@url")}" '
@@ -147,8 +151,9 @@ services_config:
     @staticmethod
     def help() -> None:
         log.info('do map current - показать ключевую информацию из текущего config.yml')
-        log.info('do map check_config <путь к yml-фалйу> - показать ключевую информацию из указанного yml-файла')
-        log.info('do map set <путь к yml-фалйу> - переключиться на проект, описаные в указанном yml-файла')
+        log.info('do map check_config <путь к yml-файлу> - показать ключевую информацию из указанного yml-файла описания проекта')
+        log.info('do map set <путь к yml-файлу> - переключиться на проект, описаный в указанном yml-файла')
+        log.info('do map generate_empty_project_config <путь к yml-файлу> - создаст заготовку для файла описания проекта')
 
 def show_config(config_path):
     config = yaml_tools.load_yaml_from_file(_get_check_file_path(config_path))
