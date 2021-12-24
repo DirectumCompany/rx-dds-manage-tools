@@ -51,9 +51,9 @@ class ManageAppliedProject(BaseComponent):
     def check_config(self, config_path: str) -> None:
         show_config(config_path)
 
+    """
     def test(self, src_config_path: str, dst_config_path: str) -> None:
         pass
-        """
         import pprint
         pp = pprint.PrettyPrinter(indent=4)                
         src_config = yaml_tools.load_yaml_from_file(src_config_path)
@@ -65,7 +65,7 @@ class ManageAppliedProject(BaseComponent):
             repos_as_str += f'"folder={repo.get("@folderName")}, type={repo.get("@solutionType")}, url={repo.get("@url")}" '
         dst_config["variables"]["repositories"]  = repos_as_str
         yaml_tools.yaml_dump_to_file(dst_config, dst_config_path+"_tmp")
-        """
+    """
 
     def set(self, project_config_path: str) -> None:
         while (True):
@@ -84,19 +84,7 @@ class ManageAppliedProject(BaseComponent):
                 dst_config["variables"]["database"] = src_config["variables"]["database"]
                 dst_config["variables"]["home_path"] = src_config["variables"]["home_path"]
                 dst_config["variables"]["home_path_src"]  = src_config["variables"]["home_path_src"]
-                repos_as_str =""
-                for repo in src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]:
-                    repos_as_str += f'"{repo.get("@folderName")}({repo.get("@solutionType")}) - {repo.get("@url")}" '
-                dst_config["variables"]["repositories"]  = repos_as_str
                 yaml_tools.yaml_dump_to_file(dst_config, self.config_path)
-
-                # вариант c подменой config.yml на ссылку
-                #if (os.path.exists(self.config_path)):
-                #   if (os.path.islink(self.config_path)):
-                #       os.unlink(self.config_path)
-                #   if (os.path.isfile(self.config_path)):
-                #       os.remove(self.config_path)
-                #os.symlink(project_config_path, self.config_path)
 
                 # поднять сервисы
                 all2 = All(self.config)
@@ -121,6 +109,7 @@ class ManageAppliedProject(BaseComponent):
     def generate_empty_project_config(self, new_config_path: str) -> None:
         template_config="""# ключевые параметры проекта
 variables:
+    # Назначение проекта
     purpose: '<Назначение проекта>'
     # БД проекта
     database: '<База данных>'

@@ -4,6 +4,6 @@
     "en": "Manage applied projects",
     "ru": "Управление прикладными проектами"
   },
-  "version": "0.1.4200.0",
+  "version": "0.1.4200.1",
   "plugin_path": "./map_plugin"
 }
