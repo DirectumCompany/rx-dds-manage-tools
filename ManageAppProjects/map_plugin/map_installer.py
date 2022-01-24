@@ -61,10 +61,13 @@ class ManageAppliedProject(BaseComponent):
     def check_config(self, config_path: str) -> None:
         show_config(config_path)
 
-    def set(self, project_config_path: str) -> None:
+    def set(self, project_config_path: str, do_not_show_config: bool = False) -> None:
         while (True):
-            show_config(project_config_path)
-            answ = input("Переключиться на указанный проект? (y,n):")
+            if not do_not_show_config:
+                show_config(project_config_path)
+                answ = input("Переключиться на указанный проект? (y,n):")
+            else:
+                answ = 'y'
             if answ=='y' or answ=='Y':
                 # остановить сервисы
                 log.info(colorize("Остановка сервисов"))
@@ -157,7 +160,7 @@ def show_config(config_path):
     log.info(f'home_path_src: {colorize(vars.get("home_path_src"))}')
     log.info('repositories:')
     for repo in repos:
-        print(f'  folder: {colorize(repo.get("@folderName").ljust(maxlen)):} solutiontype: {colorize(repo.get("@solutionType"))}  url: {colorize(repo.get("@url"))}')
+        log.info(f'  folder: {colorize(repo.get("@folderName").ljust(maxlen)):} solutiontype: {colorize(repo.get("@solutionType"))}  url: {colorize(repo.get("@url"))}')
 
 def _get_check_file_path(config_path: str) -> pathlib.Path:
     if not config_path:
