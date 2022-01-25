@@ -61,13 +61,10 @@ class ManageAppliedProject(BaseComponent):
     def check_config(self, config_path: str) -> None:
         show_config(config_path)
 
-    def set(self, project_config_path: str, do_not_show_config: bool = False) -> None:
+    def set(self, project_config_path: str, confirm: bool = True) -> None:
         while (True):
-            if not do_not_show_config:
-                show_config(project_config_path)
-                answ = input("Переключиться на указанный проект? (y,n):")
-            else:
-                answ = 'y'
+            show_config(project_config_path)
+            answ = input("Переключиться на указанный проект? (y,n):") if confirm else 'y'
             if answ=='y' or answ=='Y':
                 # остановить сервисы
                 log.info(colorize("Остановка сервисов"))
