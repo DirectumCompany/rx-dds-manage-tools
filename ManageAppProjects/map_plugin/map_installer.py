@@ -1,27 +1,22 @@
 # coding: utf-8
 """ Модуль плагина для управления прикладными проектами """
-import os
-import os.path
-from typing import Any, Optional
+from typing import Optional
 import termcolor
 import pathlib
 import time
 
-from py_common import process
 from fire.formatting import Bold
 
 from sungero_deploy.all import All
 from sungero_deploy.static_controller import StaticController
 from components.base_component import BaseComponent
-from components.component_manager import ComponentManager, component, all_component_plugins
-from components.component_searcher import ComponentSearcher
+from components.component_manager import component
 from py_common.logger import log
 from sungero_deploy.deployment_tool import DeploymentTool
-from sungero_deploy.services.sungero_web_client import SungeroWebClient
-from common_plugin import yaml_tools, git_tools
+from common_plugin import yaml_tools
 from sungero_deploy.scripts_config import get_config_model
-
-
+from sungero_deploy.tools.sungerodb import SungeroDB
+from sungero_deploy.tools.rxcmd import RxCmd
 
 MANAGE_APPLIED_PROJECTS_ALIAS = 'map'
 
@@ -43,7 +38,6 @@ class ManageAppliedProject(BaseComponent):
         """
         Установить компоненту.
         """
-        #self._static_controller.add_static(self._static_filesystem_path, self._static_url_path)
         log.info(f'"{self.__class__.__name__}" component has been successfully installed.')
         self._print_help_after_action()
 
@@ -51,17 +45,103 @@ class ManageAppliedProject(BaseComponent):
         """
         Удалить компоненту.
         """
-        #self._static_controller.remove_static(self._static_url_path)
         log.info(f'"{self.__class__.__name__}" component has been successfully uninstalled.')
         self._print_help_after_action()
 
     def current(self) -> None:
+        """ Показать параметры текущего проекта """
         show_config(self.config_path)
 
     def check_config(self, config_path: str) -> None:
+        """ Показать содержимое указанного файла описания проекта
+
+        Args:
+            config_path: путь к файлу с описанием проекта
+        """
         show_config(config_path)
 
+
+    def create_project(self, project_config_path: str, package_path:str, need_import_src:bool = False, confirm: bool = True) -> None:
+        """ Создать новый прикладной проект (эксперементальная фича).
+        Будет создана БД, в неё будет принят пакет разработки и стандратные шаблоны.
+
+        Args:
+            project_config_path: путь к файлу с описанием проекта
+            package_path: путь к пакету разработки, который должен содержать бинарники
+            need_import_src: признак необходимости принять исходники из указанного пакета разработки. По умолчанию - False
+            confirm: признак необходимости выводить запрос на создание проекта. По умолчанию - True
+        """
+        while (True):
+            show_config(project_config_path)
+            answ = input("Создать новый проект? (y,n):") if confirm else 'y'
+            if answ=='y' or answ=='Y':
+                # остановить сервисы
+                log.info(colorize("Остановка сервисов"))
+                all = All(self.config)
+                all.down()
+
+                # скорректировать etc\config.yml
+                log.info(colorize("Корректировка config.yml"))
+                src_config = yaml_tools.load_yaml_from_file(project_config_path)
+                dst_config = yaml_tools.load_yaml_from_file(self.config_path)
+                dst_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]  = src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"].copy()
+                dst_config["variables"]["purpose"] = src_config["variables"]["purpose"]
+                dst_config["variables"]["database"] = src_config["variables"]["database"]
+                dst_config["variables"]["home_path"] = src_config["variables"]["home_path"]
+                dst_config["variables"]["home_path_src"]  = src_config["variables"]["home_path_src"]
+                yaml_tools.yaml_dump_to_file(dst_config, self.config_path)
+                time.sleep(2)
+
+                # создать БД
+                log.info(colorize("Создать БД"))
+                exitcode = SungeroDB(get_config_model(self.config_path)).up()
+                if exitcode == -1:
+                    log.error(f'Ошибка при создании БД')
+                    return
+
+                # поднять сервисы
+                log.info(colorize("Подъем сервисов"))
+                all2 = All(get_config_model(self.config_path))
+                all2.config_up()
+                all2.up()
+
+                # обновить конфиг DDS
+                log.info(colorize("Обновление конфига DDS"))
+                from dds_plugin.development_studio import DevelopmentStudio
+                DevelopmentStudio(self.config_path).generate_config_settings()
+
+                # принять пакет разработки в БД
+                log.info(colorize("Ожидание загрузки сервисов"))
+                time.sleep(30) #подождать, когда сервисы загрузятся - без этого возникает ошибка
+                log.info(colorize("Прием пакета разработки"))
+                DeploymentTool(self.config_path).deploy(package = package_path, init = True)
+
+                # импортировать шаблоны
+                log.info(colorize("Ожидание загрузки сервисов"))
+                time.sleep(30) #подождать, когда сервисы загрузятся - без этого возникает ошибка
+                log.info(colorize("Импорт шаблонов"))
+                RxCmd(get_config_model(self.config_path)).import_templates()
+
+                # принять пакет разработки в БД
+                if need_import_src:
+                    log.info(colorize("Прием пакета разработки"))
+                    time.sleep(30) #подождать, когда сервисы загрузятся
+                    DevelopmentStudio(self.config_path).run(f'--import-package {package_path}')
+
+                log.info("")
+                log.info(colorize("Новые параметры:"))
+                self.current()
+                break
+            elif answ=='n' or answ=='N':
+                break
+
     def set(self, project_config_path: str, confirm: bool = True) -> None:
+        """ Переключиться на указанный прикладной проект
+
+        Args:
+            project_config_path: путь к файлу с описанием проекта
+            confirm: признак необходимости выводить запрос на создание проекта. По умолчанию - True
+        """
         while (True):
             show_config(project_config_path)
             answ = input("Переключиться на указанный проект? (y,n):") if confirm else 'y'
@@ -75,7 +155,7 @@ class ManageAppliedProject(BaseComponent):
                 log.info(colorize("Корректировка config.yml"))
                 src_config = yaml_tools.load_yaml_from_file(project_config_path)
                 dst_config = yaml_tools.load_yaml_from_file(self.config_path)
-                dst_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]  = src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"].copy() 
+                dst_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"]  = src_config["services_config"]["DevelopmentStudio"]['REPOSITORIES']["repository"].copy()
                 dst_config["variables"]["purpose"] = src_config["variables"]["purpose"]
                 dst_config["variables"]["database"] = src_config["variables"]["database"]
                 dst_config["variables"]["home_path"] = src_config["variables"]["home_path"]
@@ -102,6 +182,11 @@ class ManageAppliedProject(BaseComponent):
                 break
 
     def generate_empty_project_config(self, new_config_path: str) -> None:
+        """ Создать новый файл с описанием проекта
+
+        Args:
+            new_config_path - путь к файлу, который нужно создать
+        """
         template_config="""# ключевые параметры проекта
 variables:
     # Назначение проекта
@@ -117,7 +202,7 @@ variables:
 services_config:
     DevelopmentStudio:
         REPOSITORIES:
-            repository: 
+            repository:
             -   '@folderName': '<папка репозитория-1>'
                 '@solutionType': 'Work'
                 '@url': '<url репозитория-1>'
