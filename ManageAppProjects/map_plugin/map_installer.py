@@ -224,6 +224,7 @@ services_config:
         log.info('do map check_config <путь к yml-файлу> - показать ключевую информацию из указанного yml-файла описания проекта')
         log.info('do map set <путь к yml-файлу> - переключиться на проект, описаный в указанном yml-файла')
         log.info('do map generate_empty_project_config <путь к yml-файлу> - создаст заготовку для файла описания проекта')
+        log.info('do map create_project <путь к yml-файлу> <путь к пакету разработки> - новую БД и хранилище документов, примет пакет разработки и иницаилизирует его')
 
 def colorize(x):
     return termcolor.colored(x, color="green", attrs=["bold"])
